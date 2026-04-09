@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dirty Money | Lobby</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: white; text-align: center; }
+        .container { max-width: 400px; margin: 50px auto; padding: 20px; border: 2px solid #444; border-radius: 10px; }
+        input { padding: 10px; border-radius: 5px; border: none; width: 70%; }
+        button { padding: 10px 20px; cursor: pointer; background: #d32f2f; color: white; border: none; border-radius: 5px; font-weight: bold; }
+        button:hover { background: #b71c1c; }
+        #playerList { list-style: none; padding: 0; margin-top: 20px; }
+        #playerList li { background: #333; margin: 5px 0; padding: 10px; border-radius: 5px; border-left: 5px solid #d32f2f; }
+        .trader-badge { color: gold; font-size: 0.8em; font-weight: bold; border: 1px solid gold; padding: 2px 5px; border-radius: 3px; margin-left: 10px; }
+        .supplier-badge { position: relative; display: inline-block; margin-left: 10px; }
+        .supplier-tag { background: #2196F3; color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; vertical-align: middle; margin-left: 10px;}
+        #role-card { margin-top: 20px; padding: 20px; border: 2px dashed gold; background: #1a1a1a; border-radius: 10px; }
+        .election-zone { background: #3d3d3d; padding: 15px; margin-top: 20px; border-radius: 10px; border: 1px solid #555; }
+        .policy-card { width: 80px; height: 120px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 3px solid #fff; text-transform: uppercase; font-size: 0.8em; text-align: center; padding: 5px; }
+        .policy-card:hover { transform: translateY(-10px); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .card-authentic { background: #2e7d32; color: white; }
+        .card-fraudulent { background: #c62828; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>DIRTY MONEY</h1>
+    <p style="color: #888; font-style: italic; margin-top: -15px;">- a Food Fraud game -</p>
+    <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
+
+    <div id="setup-ui">
+        <input type="text" id="playerName" placeholder="Enter Name...">
+        <button onclick="joinGame()">JOIN</button>
+    </div>
+
+    <div id="role-card" style="display:none;">
+        <h3 style="margin-top: 0;">Your Secret Identity:</h3>
+        <h2 id="myRole" style="letter-spacing: 2px; margin: 10px 0;">???</h2>
+        <p id="role-desc" style="font-size: 0.9em; color: #bbb;"></p>
+    </div>
+
+    <ul id="playerList">
+    <!--    <li>Waiting for players...</li>-->
+    </ul>
+
+    <div id="election-ui" class="election-zone" style="display: none;">
+        <h4 style="color: gold; margin-top: 0;">You are the TRADER</h4>
+        <p>Nominate a Supplier for this round:</p>
+        <div id="supplier-candidates"></div>
+    </div>
+    
+    <div id="ready-ui" style="display:none; margin-top: 20px;">
+        <button id="readyBtn" onclick="toggleReady()" style="background: #2e7d32; width: 100%;">READY UP</button>
+    </div>
+
+    <div id="voting-ui" class="election-zone" style="display: none; border-color: #2196F3;">
+        <h3 id="voting-announcement">VOTE: Should [Name] be the Supplier?</h3>
+        <button onclick="sendVote(true)" style="background: #4CAF50; margin-right: 10px;">✅ <u>Y</u>ES (Accept)</button>
+        <button onclick="sendVote(false)" style="background: #F44336;">❌ <u>N</u>O (Reject)</button>
+    </div>
+    
+    <div id="game-message" style="margin-top: 20px; padding: 10px; background: #444; border-radius: 5px; color: gold; font-weight: bold; display: none;">
+    </div>
+
+    <div id="status-display" style="margin-top: 20px; font-size: 0.8em; color: #666; border-top: 1px solid #444; padding-top: 10px;">
+        Game Status: <span id="gameStatus">LOBBY</span>
+    </div>
+</div>
+
+<div id="funds-tracker" style="display: none; position: fixed; top: 20px; right: 20px; width: 180px; background: #1a1a1a; border: 3px solid gold; border-radius: 10px; padding: 15px; text-align: center; box-shadow: 0 0 15px rgba(255,215,0,0.3);">
+    <div style="font-size: 0.7em; color: gold; font-weight: bold; margin-bottom: 5px; letter-spacing: 1px;">COMPANY FUNDS</div>
+    <div id="funds-amount" style="font-size: 2.5em; font-weight: bold; color: white;">€3M</div>
+    <div id="funds-warning" style="font-size: 0.6em; color: #888; margin-top: 5px;">Avoid bankruptcy!</div>
+</div>
+
+<div id="legislative-ui" class="election-zone" style="display: none; border-color: #9c27b0;">
+    <h3 id="hand-instruction">Discard one card:</h3>
+    <div id="policy-hand" style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
+        </div>
+</div>
+
+<div id="power-ui" class="election-zone" style="display: none; border-color: #ff9800; background: #332200;">
+    <h3 id="power-title">SPECIAL POWER</h3>
+    <div id="power-targets"></div>
+</div>
+
+<div id="private-result" style="display: none; background: #004d40; color: #fff; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #4db6ac;">
+</div>
+
+<div id="scoreboard" style="display: none; justify-content: space-around; margin: 20px 0; padding: 15px; background: #111; border-radius: 10px; border: 1px solid #444;">
+    <div>
+        <div style="color: #4CAF50; font-size: 0.8em; font-weight: bold;">AUTHENTIC BATCHES</div>
+        <div id="score-auth" style="font-size: 2em; color: white;">0 / 5</div>
+    </div>
+    <div style="border-left: 1px solid #333;"></div>
+    <div>
+        <div style="color: #F44336; font-size: 0.8em; font-weight: bold;">FRAUDULENT BATCHES</div>
+        <div id="score-fraud" style="font-size: 2em; color: white;">0 / 6</div>
+    </div>
+</div>
+
+<script>
+    let myPlayerId = null;
+
+    async function joinGame() {
+        const nameInput = document.getElementById('playerName');
+        const name = nameInput.value.trim();
+        const joinBtn = document.querySelector('#setup-ui button');
+        if (!name) return alert("Enter a name!");
+
+        joinBtn.innerText = "JOINING...";
+        joinBtn.disabled = true;
+
+        try{
+            const response = await fetch('/join', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                myPlayerId = data.id; // Store the ID
+                document.getElementById('setup-ui').innerHTML = `<p style="color: #4CAF50;">✅ Joined as <b>${name}</b></p>`;
+                console.log("Joined successfully! ID assigned:", myPlayerId);
+                refreshLobby();
+            } else {
+                joinBtn.innerText = "JOIN";
+                joinBtn.disabled = false;
+                const errorData = await response.json();
+                alert("Failed to join: " + (errorData.error || response.statusText));
+            }
+        } catch (err) {
+            console.error("Network error:", err);
+            joinBtn.innerText = "JOIN";
+            joinBtn.disabled = false;
+            alert("Could not connect to server.");
+        }
+    }
+
+    // Allow "Enter" key to trigger Join Game
+    document.getElementById('playerName').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            joinGame();
+        }
+    });
+
+    async function toggleReady() {
+        const btn = document.getElementById('readyBtn');
+        const response = await fetch('/ready', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ playerId: myPlayerId })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            btn.innerText = data.isReady ? "UNREADY" : "READY UP";
+            btn.style.background = data.isReady ? "#f44336" : "#2e7d32";
+        }
+    }
+
+    async function startGame() {
+        const response = await fetch('/start', { method: 'POST' });
+        if (!response.ok) {
+            const error = await response.json();
+            alert(error.error);
+        }
+    }
+
+    async function nominateSupplier(targetId) {
+        const response = await fetch('/nominate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                traderId: myPlayerId, 
+                supplierId: targetId 
+            })
+        });
+
+        if (response.ok) {
+            console.log("Nomination sent!");
+            refreshLobby(); // Get the new 'VOTING' status immediately
+        } else {
+            const err = await response.json();
+            alert(err.error);
+        }
+    }
+
+    async function sendVote(isYes) {
+        const response = await fetch('/vote', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                playerId: myPlayerId, 
+                vote: isYes 
+            })
+        });
+        if (response.ok) {
+            console.log("Vote cast!");
+            // We'll use a local variable to hide the UI immediately for this user
+            document.getElementById('voting-ui').style.display = 'none';
+        }
+    }
+
+    // Quick Keyboard Voting: 'y' for YES, 'n' for NO
+    document.addEventListener('keydown', (e) => {
+        const votingUI = document.getElementById('voting-ui');
+        
+        if (votingUI.style.display === 'block') {
+            const key = e.key.toLowerCase();
+            
+            if (key === 'y') {
+                console.log("Keyboard Vote: YES");
+                sendVote(true);
+            } else if (key === 'n') {
+                console.log("Keyboard Vote: NO");
+                sendVote(false);
+            }
+        }
+    });
+
+    async function refreshLobby() {        
+        try {
+            const url = myPlayerId ? `/game-state?playerId=${myPlayerId}` : '/game-state';
+            const response = await fetch(url);
+            const data = await response.json();
+
+            const setupUI = document.getElementById('setup-ui');
+            const listElement = document.getElementById('playerList');
+
+            // Spectator UI
+            if (!myPlayerId) {
+                if (data.status !== 'LOBBY') {
+                    setupUI.innerHTML = `<p style="color: #F44336;">🚫 Game is in progress</p>`;
+                } else if (data.players.length >= 10) {
+                    setupUI.innerHTML = `<p style="color: #ff9800;">🚫 Game is Full (10/10)</p>`;
+                }
+            }
+
+            // Player list
+            listElement.innerHTML = '';
+            if (data.players.length === 0) {
+                const li = document.createElement('li');
+                if (data.status !== 'LOBBY') {
+                    li.innerText = "Game is in progress...";
+                } else if (data.players.length >= 10) {
+                    li.innerText = "Game is Full";
+                } else {
+                    li.innerText = "Waiting for players...";
+                }
+                listElement.appendChild(li);
+            }
+
+            if (!myPlayerId) return;
+            document.getElementById('gameStatus').innerText = data.status;
+            
+            // --- LOGIC FOR MESSAGES ---
+            const msgBox = document.getElementById('game-message');
+            if (data.lastResult) {
+                msgBox.innerText = data.lastResult;
+                msgBox.style.display = 'block';
+                
+                // Visual feedback: If it failed, make it red; if it passed, make it green
+                msgBox.style.color = data.lastResult.includes("FAIL") || data.lastResult.includes("FRAUDULENT") ? "#ff5252" : "#4CAF50";
+            } else {
+                msgBox.style.display = 'none';
+            }
+
+            // 1. Manage Player List UI
+            listElement.innerHTML = '';
+            
+            data.players.forEach((p, index) => {
+                const li = document.createElement('li');
+                const playerCard = document.createElement('div');
+                playerCard.className = 'player-card';
+                
+                const readyUI = document.getElementById('ready-ui');
+                if (myPlayerId && data.status === 'LOBBY') {
+                    readyUI.style.display = 'block';
+                } else {
+                    readyUI.style.display = 'none';
+                }
+
+                if (!p.isAlive) {
+                    li.style.opacity = "0.4";
+                    li.innerHTML = `<span>💀 <del>${p.name}</del> (Fired)</span>`;
+                } else {
+                    // Ready status
+                    let readyStatus = "";
+                    if (data.status === 'LOBBY' && p.isReady) {
+                        readyStatus = " <b style='color: #4CAF50;'>(Ready)</b>";
+                    }
+                    // Vote status
+                    let voteStatus = "";
+                    if (data.status === 'VOTING' && data.votes[p.id] !== undefined) {
+                        voteStatus = " (VOTED)";
+                    }
+                    // Fraudulent identity reveal
+                    let identityBadge = "";
+                    if (p.identity && p.id !== myPlayerId) {
+                        const isTrickMeister = p.identity === 'Trick-Meister';
+                        const color = isTrickMeister ? '#ff9800' : '#F44336'; // Orange for TM, Red for Fraud
+                        identityBadge = ` <span style="color: ${color}; font-size: 0.7em; border: 1px solid ${color}; padding: 1px 4px; border-radius: 3px; margin-left: 5px;">${p.identity.toUpperCase()}</span>`;
+                    }
+                    playerCard.innerHTML = `<span>${p.name}${readyStatus}${voteStatus}${identityBadge}</span>`;
+                    listElement.appendChild(playerCard);
+
+                    // Trader badge
+                    if (data.status !== 'LOBBY' && index === data.traderIndex) {
+                        playerCard.innerHTML += `<span class="trader-badge">TRADER</span>`;
+                    }
+
+                    // Supplier/Nominee Badges
+                    const isNominated = data.nominatedSupplierId === p.id;
+                    if (isNominated) {
+                        if (data.status === 'VOTING') {
+                            li.style.borderLeft = "5px solid #2196F3";
+                        } else if (data.status === 'LEGISLATIVE' || data.status === 'POWER') {
+                            // The vote passed! Show the full Supplier Badge
+                            playerCard.innerHTML += `<span class="supplier-tag">SUPPLIER</span>`;
+                        }
+                    }
+                }
+                li.appendChild(playerCard);
+                listElement.appendChild(li);
+            });
+
+            // 2. Handle Identity Reveal
+            const me = data.players.find(p => p.id === myPlayerId);
+            if (me && me.identity) {
+                const card = document.getElementById('role-card');
+                const roleDisplay = document.getElementById('myRole');
+                card.style.display = 'block';
+                roleDisplay.innerText = me.identity.toUpperCase();
+                roleDisplay.style.color = (me.identity === 'Authentic') ? '#4CAF50' : '#F44336';
+            }
+
+            // 4. Election Logic (If I am the Trader)
+            const electionUI = document.getElementById('election-ui');
+            const candidateZone = document.getElementById('supplier-candidates');
+            const isMyTurn = (data.status === 'ELECTION' && data.players[data.traderIndex].id === myPlayerId);
+
+            if (isMyTurn && !data.nominatedSupplierId) {
+                electionUI.style.display = 'block';
+                if (candidateZone.children.length === 0) {
+                    candidateZone.innerHTML = ''; 
+                    data.players.forEach(p => {
+                        if (p.id !== myPlayerId) { // Can't nominate yourself
+                            const btn = document.createElement('button');
+                            btn.innerText = `${p.name}`;
+                            btn.style.margin = '5px';
+                            btn.onclick = () => nominateSupplier(p.id);
+                            candidateZone.appendChild(btn);
+                        }
+                    });
+                }
+            } else {
+                electionUI.style.display = 'none';
+                candidateZone.innerHTML = '';
+            }
+            
+            // 5. Voting Logic
+            const votingUI = document.getElementById('voting-ui');
+            const votingAnnounce = document.getElementById('voting-announcement');
+            const votingButtons = document.querySelectorAll('#voting-ui button');
+            if (data.status === 'VOTING' && data.nominatedSupplierId) {
+                votingUI.style.display = 'block';
+                const haveVoted = data.votes && data.votes[myPlayerId] !== undefined;
+
+                if (haveVoted) {
+                    votingAnnounce.innerText = "Waiting for others to vote...";
+                    votingButtons.forEach(b => b.style.display = 'none');
+                } else {
+                    const supplier = data.players.find(p => p.id === data.nominatedSupplierId);
+                    const name = supplier ? supplier.name : "the nominee";
+                    votingAnnounce.innerText = `VOTE: Should ${supplier.name} be the Supplier?`;
+                    votingButtons.forEach(b => b.style.display = 'inline-block');
+                }
+            } else {
+                votingUI.style.display = 'none';
+                votingButtons.forEach(b => b.style.display = 'inline-block');
+            }
+
+            // 6. Legislative Logic (Card Hand)
+            const legUI = document.getElementById('legislative-ui');
+            const handContainer = document.getElementById('policy-hand');
+            const handInstruction = document.getElementById('hand-instruction');
+
+            // Check if I am the Trader or the Supplier
+            const isTrader = data.players[data.traderIndex].id === myPlayerId;
+            const isSupplier = data.nominatedSupplierId === myPlayerId;
+
+            if (data.status === 'LEGISLATIVE' && (isTrader || isSupplier)) {
+                legUI.style.display = 'block';
+                // Only show the hand to the person whose turn it is
+                const isTraderTurn = data.hand.length === 3;
+                const isSupplierTurn = data.hand.length === 2;
+
+                if (isTrader){
+                    if(isTraderTurn) {
+                    handInstruction.innerText = "TRADER: Discard 1 card";
+                    } else {
+                        handInstruction.innerText = "Waiting for Supplier to select batch...";
+                    }
+                } else if (isSupplier) {
+                    if (isSupplierTurn) {
+                    handInstruction.innerText = "SUPPLIER: Discard 1 card";
+                    } else {
+                    handInstruction.innerText = "Waiting for Trader to discard...";
+                    }
+                }
+                if((isTrader && isTraderTurn) || (isSupplier && isSupplierTurn)) {
+                    handContainer.innerHTML = '';
+                    data.hand.forEach((policy, index) => {
+                        const card = document.createElement('div');
+                        card.className = `policy-card card-${policy.toLowerCase()}`;
+                        card.innerText = policy;
+                        card.onclick = () => discardCard(index);
+                        handContainer.appendChild(card);
+                    });
+                } else {
+                    handContainer.innerHTML = '';
+                }
+            } else {
+                legUI.style.display = 'none';
+            }
+
+            // Update Scoreboard
+            document.getElementById('score-auth').innerText = `${data.scores.authentic} / 5`;
+            document.getElementById('score-fraud').innerText = `${data.scores.fraudulent} / 6`;
+            // Hide/Show Board based on game status
+            const scoreboard = document.getElementById('scoreboard');
+            if (data.status === 'LOBBY') {
+                scoreboard.style.display = 'none';
+            } else {
+                scoreboard.style.display = 'flex';
+            }
+
+            // 7. Power Phase Logic
+            const powerUI = document.getElementById('power-ui');
+            const privateResult = document.getElementById('private-result');
+            const targetZone = document.getElementById('power-targets');
+
+            // Show private result to Trader if it exists
+            if (data.powerResult && isTrader && data.status !== 'END') {
+                privateResult.style.display = 'block';
+                privateResult.innerHTML = `
+                <div style="font-weight:bold; color:#4db6ac;">👁️ PRIVATE INTEL:</div>
+                <div style="margin: 10px 0;">${data.powerResult}</div>
+                <button onclick="endPowerTurn()" style="padding:5px 10px; background:#4db6ac; font-size:0.8em;">
+                    OK, Start Next Round
+                </button>
+                `;
+            } else {
+                privateResult.style.display = 'none';
+            }
+
+            if (data.status === 'POWER' && isTrader && data.activePower && !data.powerResult) {
+                powerUI.style.display = 'block';
+                document.getElementById('power-title').innerText = data.activePower.replace('_', ' ');
+
+                targetZone.innerHTML = '';
+                if (data.activePower === 'INVESTIGATE' || data.activePower === 'EXECUTION' || data.activePower === 'SPECIAL_ELECTION') {
+                    data.players.forEach(p => {
+                        if (p.id !== myPlayerId && p.isAlive) {
+                            const btn = document.createElement('button');
+                            if (data.activePower === 'EXECUTION') {
+                                btn.innerText = `FIRE ${p.name}`;
+                                btn.style.background = "#000";
+                            } else if (data.activePower === 'INVESTIGATE') {
+                                btn.innerText = `Investigate ${p.name}`;
+                            } else if (data.activePower === 'SPECIAL_ELECTION') {
+                                btn.innerText = `Appoint ${p.name}`;
+                                btn.style.background = "#2196F3";
+                            }
+                            btn.style.margin = '5px';
+                            btn.onclick = () => usePower(p.id);
+                            targetZone.appendChild(btn);
+                        }
+                    });
+                } else if (data.activePower === 'POLICY_PEEK') {
+                    const btn = document.createElement('button');
+                    btn.innerText = "View Top 3 Cards";
+                    btn.onclick = () => usePower(null);
+                    targetZone.appendChild(btn);
+                }
+            } else {
+                powerUI.style.display = 'none';
+            }
+
+            // 8. Funds Tracker
+            const fundsDisplay = document.getElementById('funds-amount');
+            const fundsTracker = document.getElementById('funds-tracker');
+            
+            if (data.status === 'LOBBY' || data.status === 'END') {
+                fundsTracker.style.display = 'none';
+            } else {
+                fundsTracker.style.display = 'block';
+                fundsDisplay.innerText = `€${data.funds}M`;
+            
+                if (data.funds <= 1) {
+                    fundsDisplay.style.color = "#f44336";
+                    fundsTracker.style.borderColor = "#f44336";
+                } else {
+                    fundsDisplay.style.color = "white";
+                    fundsTracker.style.borderColor = "gold";
+                }
+            }
+
+        } catch (err) {
+            console.error("Polling error:", err);
+        }
+    }
+
+    async function discardCard(index) {
+        const response = await fetch('/discard', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                playerId: myPlayerId, 
+                cardIndex: index 
+            })
+        });
+
+        if (response.ok) {
+            console.log("Card discarded");
+            refreshLobby();
+        } else {
+            const err = await response.json();
+            alert(err.error);
+        }
+    }
+
+    async function usePower(targetId) {
+        console.log("Using power on:", targetId);
+        const response = await fetch('/use-power', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ playerId: myPlayerId, targetId: targetId })
+        });
+        if (response.ok) {
+            console.log("Power used!");
+            refreshLobby();
+        } else {
+            const err = await response.json();
+            alert(err.error);
+        }
+    }
+
+    async function endPowerTurn() {
+        await fetch('/end-power', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ playerId: myPlayerId })
+        });
+        refreshLobby();
+    }
+
+    document.getElementById('playerName').focus();
+    setInterval(refreshLobby, 2000);
+</script>
+
+</body>
+</html>
