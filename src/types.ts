@@ -1,0 +1,29 @@
+export type Identity = 'Authentic' | 'Fraudulent' | 'Trick-Meister' | null;
+export type Policy = 'Authentic' | 'Fraudulent';
+
+export interface Player {
+    id: string;
+    name: string;
+    isReady: boolean;
+    identity: Identity;
+    isAlive: boolean;
+}
+
+export interface GameState {
+    players: Player[];
+    status: 'LOBBY' | 'ELECTION' | 'VOTING' | 'LEGISLATIVE' | 'POWER' | 'END';
+    policyDeck: Policy[];
+    discardPile: Policy[];
+    traderIndex: number;
+    nominatedSupplierId: string | null;
+    votes: Record<string, boolean>;
+    lastResult: string | null;
+    hand: Policy[];
+    scores: { authentic: number; fraudulent: number };
+    boardType: 'small' | 'medium' | 'large';
+    activePower: string | null;
+    powerResult: string | null;
+    originalTraderIndex: number | null;
+    tempNextTrader: number | null;
+    funds: number;
+}

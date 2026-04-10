@@ -2,102 +2,695 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dirty Money | Lobby</title>
+    <title>Dirty Money | Investigation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Righteous&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; background: #222; color: white; text-align: center; }
-        .container { max-width: 400px; margin: 50px auto; padding: 20px; border: 2px solid #444; border-radius: 10px; }
-        input { padding: 10px; border-radius: 5px; border: none; width: 70%; }
-        button { padding: 10px 20px; cursor: pointer; background: #d32f2f; color: white; border: none; border-radius: 5px; font-weight: bold; }
-        button:hover { background: #b71c1c; }
-        #playerList { list-style: none; padding: 0; margin-top: 20px; }
-        #playerList li { background: #333; margin: 5px 0; padding: 10px; border-radius: 5px; border-left: 5px solid #d32f2f; }
-        .trader-badge { color: gold; font-size: 0.8em; font-weight: bold; border: 1px solid gold; padding: 2px 5px; border-radius: 3px; margin-left: 10px; }
-        .supplier-badge { position: relative; display: inline-block; margin-left: 10px; }
-        .supplier-tag { background: #2196F3; color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; vertical-align: middle; margin-left: 10px;}
-        #role-card { margin-top: 20px; padding: 20px; border: 2px dashed gold; background: #1a1a1a; border-radius: 10px; }
-        .election-zone { background: #3d3d3d; padding: 15px; margin-top: 20px; border-radius: 10px; border: 1px solid #555; }
-        .policy-card { width: 80px; height: 120px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 3px solid #fff; text-transform: uppercase; font-size: 0.8em; text-align: center; padding: 5px; }
-        .policy-card:hover { transform: translateY(-10px); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .card-authentic { background: #2e7d32; color: white; }
-        .card-fraudulent { background: #c62828; color: white; }
+        :root {
+            --clr-bg-dark: oklch(8% 0.01 220);
+            --clr-bg-surface: oklch(14% 0.015 220);
+            --clr-text-primary: oklch(92% 0.02 0);
+            --clr-text-muted: oklch(68% 0.02 220);
+            --clr-authentic: oklch(52% 0.18 240);
+            --clr-fraudulent: oklch(52% 0.18 20);
+            --clr-border: oklch(25% 0.02 220);
+            
+            --font-display: 'Righteous', sans-serif;
+            --font-body: 'Courier Prime', monospace;
+            
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--clr-bg-dark);
+            color: var(--clr-text-primary);
+            line-height: 1.6;
+            font-size: 14px;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255,255,255,0.02) 2px,
+                    rgba(255,255,255,0.02) 4px
+                );
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: var(--space-2xl);
+            border-bottom: 2px solid var(--clr-border);
+            padding-bottom: var(--space-lg);
+        }
+
+        .header-title {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            color: var(--clr-text-primary);
+        }
+
+        .header-subtitle {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--clr-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+
+        /* Input Groups */
+        .input-group {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: var(--space-md);
+            background: var(--clr-bg-surface);
+            border: 1px solid var(--clr-border);
+            color: var(--clr-text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border-color 0.2s, outline 0.2s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--clr-authentic);
+        }
+
+        input::placeholder {
+            color: var(--clr-text-muted);
+        }
+
+        /* Buttons */
+        button {
+            padding: var(--space-md) var(--space-lg);
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--clr-fraudulent);
+            color: var(--clr-text-primary);
+        }
+
+        .btn-primary:hover {
+            background: oklch(48% 0.19 20);
+        }
+
+        .btn-secondary {
+            background: var(--clr-authentic);
+            color: var(--clr-text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: oklch(48% 0.19 240);
+        }
+
+        .btn-danger {
+            background: oklch(45% 0.16 0);
+            color: var(--clr-text-primary);
+        }
+
+        .btn-danger:hover {
+            background: oklch(42% 0.16 0);
+        }
+
+        /* Role Card - Classified Document Style */
+        #role-card {
+            display: none;
+            background: var(--clr-bg-surface);
+            border: 2px solid var(--clr-border);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
+            position: relative;
+        }
+
+        #role-card::before {
+            content: 'CLASSIFIED';
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            color: var(--clr-fraudulent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.6;
+        }
+
+        #role-card h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--clr-text-muted);
+            margin-bottom: var(--space-md);
+        }
+
+        #myRole {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            margin-bottom: var(--space-md);
+            text-transform: uppercase;
+        }
+
+        #role-desc {
+            font-size: 0.9rem;
+            color: var(--clr-text-muted);
+            line-height: 1.7;
+        }
+
+        /* Player List */
+        .players-section {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .section-label {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--clr-text-muted);
+            margin-bottom: var(--space-md);
+            display: block;
+        }
+
+        #playerList {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-md);
+        }
+
+        #playerList li {
+            background: var(--clr-bg-surface);
+            border: 1px solid var(--clr-border);
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            transition: all 0.2s ease-out;
+            position: relative;
+        }
+
+        #playerList li:hover {
+            border-color: var(--clr-authentic);
+            background: oklch(16% 0.015 220);
+        }
+
+        #playerList li[data-player-status="waiting"] {
+            opacity: 0.6;
+        }
+
+        .player-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: var(--space-md);
+        }
+
+        .player-name {
+            font-weight: 700;
+            color: var(--clr-text-primary);
+            flex: 1;
+        }
+
+        .player-status {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--clr-text-muted);
+        }
+
+        .player-status.ready {
+            color: var(--clr-authentic);
+            font-weight: 700;
+        }
+
+        .player-status.voted {
+            color: var(--clr-authentic);
+            font-weight: 700;
+        }
+
+        .player-status.eliminated {
+            text-decoration: line-through;
+            color: var(--clr-fraudulent);
+        }
+
+        .badge {
+            display: inline-block;
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-xs) var(--space-sm);
+            margin-top: var(--space-xs);
+            font-weight: 700;
+        }
+
+        .badge-trader {
+            color: oklch(75% 0.1 50);
+            background: oklch(18% 0.08 50);
+        }
+
+        .badge-supplier {
+            color: var(--clr-authentic);
+            background: oklch(22% 0.15 240);
+        }
+
+        .badge-identity {
+            color: var(--clr-fraudulent);
+            background: oklch(18% 0.12 20);
+        }
+
+        /* Zones */
+        .zone {
+            background: var(--clr-bg-surface);
+            border: 1px solid var(--clr-border);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .zone-title {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-md);
+            color: var(--clr-text-primary);
+        }
+
+        #election-ui { display: none; }
+        #voting-ui { display: none; border-top: 2px solid var(--clr-authentic); }
+        #legislative-ui { display: none; border-top: 2px solid oklch(60% 0.12 270); }
+        #power-ui { display: none; border-top: 2px solid oklch(60% 0.12 50); }
+
+        #voting-ui .zone-title { color: var(--clr-authentic); }
+        #legislative-ui .zone-title { color: oklch(60% 0.12 270); }
+        #power-ui .zone-title { color: oklch(60% 0.12 50); }
+
+        #voting-ui #voting-announcement {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            margin-bottom: var(--space-md);
+            color: var(--clr-text-primary);
+        }
+
+        #ready-ui {
+            margin-top: var(--space-lg);
+        }
+
+        #ready-ui button {
+            width: 100%;
+        }
+
+        /* Policy Cards */
+        #policy-hand {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-top: var(--space-lg);
+        }
+
+        .policy-card {
+            width: 100px;
+            height: 140px;
+            border: 2px solid var(--clr-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: var(--space-sm);
+        }
+
+        .policy-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--clr-text-primary);
+        }
+
+        .card-authentic {
+            background: oklch(18% 0.12 240);
+            color: var(--clr-authentic);
+            border-color: var(--clr-authentic);
+        }
+
+        .card-fraudulent {
+            background: oklch(18% 0.12 20);
+            color: var(--clr-fraudulent);
+            border-color: var(--clr-fraudulent);
+        }
+
+        /* Messages */
+        #game-message {
+            display: none;
+            background: var(--clr-bg-surface);
+            border-top: 3px solid var(--clr-authentic);
+            border-left: 1px solid var(--clr-border);
+            border-right: 1px solid var(--clr-border);
+            border-bottom: 1px solid var(--clr-border);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        #game-message.success {
+            border-top-color: var(--clr-authentic);
+            color: var(--clr-authentic);
+        }
+
+        #game-message.failure {
+            border-top-color: var(--clr-fraudulent);
+            color: var(--clr-fraudulent);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md);
+            background: var(--clr-bg-surface);
+            border: 1px solid var(--clr-border);
+            margin-top: var(--space-xl);
+            gap: var(--space-lg);
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .status-label {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--clr-text-muted);
+        }
+
+        .status-value {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--clr-text-primary);
+            text-transform: uppercase;
+        }
+
+        /* Funds Tracker */
+        #funds-tracker {
+            display: none;
+            position: fixed;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            width: 220px;
+            background: var(--clr-bg-surface);
+            border: 2px solid var(--clr-border);
+            padding: var(--space-lg);
+            text-align: center;
+            z-index: 100;
+        }
+
+        #funds-tracker.warning {
+            border-color: var(--clr-fraudulent);
+        }
+
+        .funds-label {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--clr-text-muted);
+            margin-bottom: var(--space-md);
+        }
+
+        #funds-amount {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--clr-text-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        #funds-tracker.warning #funds-amount {
+            color: var(--clr-fraudulent);
+        }
+
+        .funds-warning {
+            font-size: 0.75rem;
+            color: var(--clr-text-muted);
+        }
+
+        /* Scoreboard */
+        #scoreboard {
+            display: none;
+            grid-template-columns: 1fr auto 1fr;
+            gap: var(--space-xl);
+            margin: var(--space-lg) 0;
+            padding: var(--space-lg);
+            background: var(--clr-bg-surface);
+            border: 1px solid var(--clr-border);
+            align-items: center;
+        }
+
+        .score-column {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .score-label {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--clr-text-muted);
+        }
+
+        .score-value {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--clr-text-primary);
+        }
+
+        .score-authentic .score-label { color: var(--clr-authentic); }
+        .score-authentic .score-value { color: var(--clr-authentic); }
+        .score-fraudulent .score-label { color: var(--clr-fraudulent); }
+        .score-fraudulent .score-value { color: var(--clr-fraudulent); }
+
+        .score-divider {
+            width: 2px;
+            height: 60px;
+            background: var(--clr-border);
+        }
+
+        /* Power Results */
+        #private-result {
+            display: none;
+            background: oklch(16% 0.1 180);
+            border: 2px solid oklch(45% 0.15 180);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            border-left: 4px solid oklch(45% 0.15 180);
+        }
+
+        #private-result > div:first-child {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: oklch(60% 0.15 180);
+            margin-bottom: var(--space-md);
+        }
+
+        #private-result button {
+            margin-top: var(--space-md);
+            background: oklch(45% 0.15 180);
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-lg) var(--space-md);
+            }
+
+            .header-title {
+                font-size: 2rem;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            #playerList {
+                grid-template-columns: 1fr;
+            }
+
+            #funds-tracker {
+                top: auto;
+                bottom: var(--space-lg);
+                right: var(--space-lg);
+                left: auto;
+            }
+
+            #scoreboard {
+                grid-template-columns: 1fr auto 1fr;
+                gap: var(--space-md);
+                padding: var(--space-md);
+            }
+
+            .score-divider {
+                height: 40px;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>DIRTY MONEY</h1>
-    <p style="color: #888; font-style: italic; margin-top: -15px;">- a Food Fraud game -</p>
-    <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
+    <!-- Header -->
+    <header class="header">
+        <h1 class="header-title">dirty money</h1>
+        <p class="header-subtitle">food fraud investigation</p>
+    </header>
 
+    <!-- Join Game Setup -->
     <div id="setup-ui">
-        <input type="text" id="playerName" placeholder="Enter Name...">
-        <button onclick="joinGame()">JOIN</button>
-    </div>
-
-    <div id="role-card" style="display:none;">
-        <h3 style="margin-top: 0;">Your Secret Identity:</h3>
-        <h2 id="myRole" style="letter-spacing: 2px; margin: 10px 0;">???</h2>
-        <p id="role-desc" style="font-size: 0.9em; color: #bbb;"></p>
-    </div>
-
-    <ul id="playerList">
-    <!--    <li>Waiting for players...</li>-->
-    </ul>
-
-    <div id="election-ui" class="election-zone" style="display: none;">
-        <h4 style="color: gold; margin-top: 0;">You are the TRADER</h4>
-        <p>Nominate a Supplier for this round:</p>
-        <div id="supplier-candidates"></div>
-    </div>
-    
-    <div id="ready-ui" style="display:none; margin-top: 20px;">
-        <button id="readyBtn" onclick="toggleReady()" style="background: #2e7d32; width: 100%;">READY</button>
-    </div>
-
-    <div id="voting-ui" class="election-zone" style="display: none; border-color: #2196F3;">
-        <h3 id="voting-announcement">VOTE: Should [Name] be the Supplier?</h3>
-        <button onclick="sendVote(true)" style="background: #4CAF50; margin-right: 10px;">✅ <u>Y</u>ES (Accept)</button>
-        <button onclick="sendVote(false)" style="background: #F44336;">❌ <u>N</u>O (Reject)</button>
-    </div>
-    
-    <div id="game-message" style="margin-top: 20px; padding: 10px; background: #444; border-radius: 5px; color: gold; font-weight: bold; display: none;">
-    </div>
-
-    <div id="status-display" style="margin-top: 20px; font-size: 0.8em; color: #666; border-top: 1px solid #444; padding-top: 10px;">
-        Game Status: <span id="gameStatus">LOBBY</span>
-    </div>
-</div>
-
-<div id="funds-tracker" style="display: none; position: fixed; top: 20px; right: 20px; width: 180px; background: #1a1a1a; border: 3px solid gold; border-radius: 10px; padding: 15px; text-align: center; box-shadow: 0 0 15px rgba(255,215,0,0.3);">
-    <div style="font-size: 0.7em; color: gold; font-weight: bold; margin-bottom: 5px; letter-spacing: 1px;">COMPANY FUNDS</div>
-    <div id="funds-amount" style="font-size: 2.5em; font-weight: bold; color: white;">€3M</div>
-    <div id="funds-warning" style="font-size: 0.6em; color: #888; margin-top: 5px;">Avoid bankruptcy!</div>
-</div>
-
-<div id="legislative-ui" class="election-zone" style="display: none; border-color: #9c27b0;">
-    <h3 id="hand-instruction">Discard one card:</h3>
-    <div id="policy-hand" style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
+        <div class="input-group">
+            <input type="text" id="playerName" placeholder="Your Code Name...">
+            <button class="btn-primary" onclick="joinGame()">enter</button>
         </div>
-</div>
-
-<div id="power-ui" class="election-zone" style="display: none; border-color: #ff9800; background: #332200;">
-    <h3 id="power-title">SPECIAL POWER</h3>
-    <div id="power-targets"></div>
-</div>
-
-<div id="private-result" style="display: none; background: #004d40; color: #fff; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #4db6ac;">
-</div>
-
-<div id="scoreboard" style="display: none; justify-content: space-around; margin: 20px 0; padding: 15px; background: #111; border-radius: 10px; border: 1px solid #444;">
-    <div>
-        <div style="color: #4CAF50; font-size: 0.8em; font-weight: bold;">AUTHENTIC BATCHES</div>
-        <div id="score-auth" style="font-size: 2em; color: white;">0 / 5</div>
     </div>
-    <div style="border-left: 1px solid #333;"></div>
-    <div>
-        <div style="color: #F44336; font-size: 0.8em; font-weight: bold;">FRAUDULENT BATCHES</div>
-        <div id="score-fraud" style="font-size: 2em; color: white;">0 / 6</div>
+
+    <!-- Role Reveal Card -->
+    <div id="role-card">
+        <h3>Player Profile</h3>
+        <h2 id="myRole">???</h2>
+        <p id="role-desc"></p>
     </div>
+
+    <!-- Message Alert -->
+    <div id="game-message"></div>
+
+    <!-- Scoreboard -->
+    <div id="scoreboard">
+        <div class="score-column score-authentic">
+            <span class="score-label">Authentic Batches</span>
+            <span class="score-value" id="score-auth">0 / 5</span>
+        </div>
+        <div class="score-divider"></div>
+        <div class="score-column score-fraudulent">
+            <span class="score-label">Fraudulent Batches</span>
+            <span class="score-value" id="score-fraud">0 / 6</span>
+        </div>
+    </div>
+
+    <!-- Ready Button -->
+    <div id="ready-ui">
+        <button class="btn-secondary" id="readyBtn" onclick="toggleReady()" style="width: 100%;">mark ready</button>
+    </div>
+
+    <!-- Players Board -->
+    <div class="players-section">
+        <label class="section-label">players</label>
+        <ul id="playerList"></ul>
+    </div>
+
+    <!-- Election Phase -->
+    <div id="election-ui" class="zone">
+        <div class="zone-title">nominate supplier</div>
+        <p style="margin: var(--space-md) 0;">Select a player to nominate:</p>
+        <div id="supplier-candidates" style="display: flex; flex-wrap: wrap; gap: var(--space-md);"></div>
+    </div>
+
+    <!-- Voting Phase -->
+    <div id="voting-ui" class="zone">
+        <div class="zone-title">cast your vote</div>
+        <p id="voting-announcement" style="margin: var(--space-md) 0;"></p>
+        <div style="display: flex; gap: var(--space-md); margin-top: var(--space-md);">
+            <button class="btn-secondary" onclick="sendVote(true)" style="flex: 1;">✓ accept</button>
+            <button class="btn-danger" onclick="sendVote(false)" style="flex: 1;">✗ reject</button>
+        </div>
+    </div>
+
+    <!-- Legislative Phase -->
+    <div id="legislative-ui" class="zone">
+        <div class="zone-title">discard batch</div>
+        <h4 id="hand-instruction" style="font-family: var(--font-body); text-transform: uppercase; letter-spacing: 1px; margin: var(--space-md) 0; color: var(--clr-text-muted);"></h4>
+        <div id="policy-hand"></div>
+    </div>
+
+    <!-- Power Phase -->
+    <div id="power-ui" class="zone">
+        <div class="zone-title" id="power-title">special power</div>
+        <div id="power-targets" style="display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: var(--space-md);"></div>
+    </div>
+
+    <!-- Private Results -->
+    <div id="private-result"></div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-item">
+            <span class="status-label">Investigation Phase</span>
+            <span class="status-value" id="gameStatus">lobby</span>
+        </div>
+    </div>
+</div>
+
+<!-- Funds Tracker -->
+<div id="funds-tracker">
+    <div class="funds-label">company funds</div>
+    <div id="funds-amount">€3M</div>
+    <div class="funds-warning">Avoid bankruptcy</div>
 </div>
 
 <script>
@@ -109,7 +702,7 @@
         const joinBtn = document.querySelector('#setup-ui button');
         if (!name) return alert("Enter a name!");
 
-        joinBtn.innerText = "JOINING...";
+        joinBtn.innerText = "joining...";
         joinBtn.disabled = true;
 
         try{
@@ -122,25 +715,24 @@
             if (response.ok) {
                 const data = await response.json();
                 myPlayerId = data.id;
-                localStorage.setItem('dirtyMoneyplayerId', myPlayerId);
-                document.getElementById('setup-ui').innerHTML = `<p style="color: #4CAF50;">✅ Joined as <b>${name}</b></p>`;
+                localStorage.setItem('dirtyMoneyPlayerId', myPlayerId);
+                document.getElementById('setup-ui').innerHTML = `<p style="color: var(--clr-authentic); font-family: var(--font-display); text-transform: uppercase;">✓ Joined as <b>${name}</b></p>`;
                 console.log("Joined successfully! ID assigned:", myPlayerId);
                 refreshLobby();
             } else {
-                joinBtn.innerText = "JOIN";
+                joinBtn.innerText = "enter";
                 joinBtn.disabled = false;
                 const errorData = await response.json();
                 alert("Failed to join: " + (errorData.error || response.statusText));
             }
         } catch (err) {
             console.error("Network error:", err);
-            joinBtn.innerText = "JOIN";
+            joinBtn.innerText = "enter";
             joinBtn.disabled = false;
             alert("Could not connect to server.");
         }
     }
 
-    // Allow "Enter" key to trigger Join Game
     document.getElementById('playerName').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             joinGame();
@@ -157,16 +749,7 @@
 
         if (response.ok) {
             const data = await response.json();
-            btn.innerText = data.isReady ? "UNREADY" : "READY";
-            btn.style.background = data.isReady ? "#f44336" : "#2e7d32";
-        }
-    }
-
-    async function startGame() {
-        const response = await fetch('/start', { method: 'POST' });
-        if (!response.ok) {
-            const error = await response.json();
-            alert(error.error);
+            btn.innerText = data.isReady ? "unready" : "mark ready";
         }
     }
 
@@ -182,7 +765,7 @@
 
         if (response.ok) {
             console.log("Nomination sent!");
-            refreshLobby(); // Get the new 'VOTING' status immediately
+            refreshLobby();
         } else {
             const err = await response.json();
             alert(err.error);
@@ -200,25 +783,16 @@
         });
         if (response.ok) {
             console.log("Vote cast!");
-            // We'll use a local variable to hide the UI immediately for this user
             document.getElementById('voting-ui').style.display = 'none';
         }
     }
 
-    // Quick Keyboard Voting: 'y' for YES, 'n' for NO
     document.addEventListener('keydown', (e) => {
         const votingUI = document.getElementById('voting-ui');
-        
         if (votingUI.style.display === 'block') {
             const key = e.key.toLowerCase();
-            
-            if (key === 'y') {
-                console.log("Keyboard Vote: YES");
-                sendVote(true);
-            } else if (key === 'n') {
-                console.log("Keyboard Vote: NO");
-                sendVote(false);
-            }
+            if (key === 'y') sendVote(true);
+            else if (key === 'n') sendVote(false);
         }
     });
 
@@ -231,114 +805,112 @@
             const setupUI = document.getElementById('setup-ui');
             const listElement = document.getElementById('playerList');
 
-            // Spectator UI
             if (!myPlayerId) {
                 if (data.status !== 'LOBBY') {
-                    setupUI.innerHTML = `<p style="color: #F44336;">🚫 Game is in progress</p>`;
+                    setupUI.innerHTML = `<p style="color: var(--clr-fraudulent);">🚫 Game in progress</p>`;
                 } else if (data.players.length >= 10) {
-                    setupUI.innerHTML = `<p style="color: #ff9800;">🚫 Game is Full (10/10)</p>`;
+                    setupUI.innerHTML = `<p style="color: var(--clr-fraudulent);">🚫 Game Full (10/10)</p>`;
                 }
             }
 
-            // Player list
             listElement.innerHTML = '';
             if (data.players.length === 0) {
                 const li = document.createElement('li');
-                if (data.status !== 'LOBBY') {
-                    li.innerText = "Game is in progress...";
-                } else if (data.players.length >= 10) {
-                    li.innerText = "Game is Full";
-                } else {
-                    li.innerText = "Waiting for players...";
-                }
+                li.innerText = data.status !== 'LOBBY' ? "Game in progress..." : data.players.length >= 10 ? "Game Full" : "Waiting for players...";
                 listElement.appendChild(li);
             }
 
             if (!myPlayerId) return;
-            document.getElementById('gameStatus').innerText = data.status;
+            document.getElementById('gameStatus').innerText = data.status.toLowerCase();
             
-            // --- LOGIC FOR MESSAGES ---
+            // Message box
             const msgBox = document.getElementById('game-message');
             if (data.lastResult) {
                 msgBox.innerText = data.lastResult;
                 msgBox.style.display = 'block';
-                
-                // Visual feedback: If it failed, make it red; if it passed, make it green
-                msgBox.style.color = data.lastResult.includes("FAIL") || data.lastResult.includes("FRAUDULENT") ? "#ff5252" : "#4CAF50";
+                msgBox.classList.toggle('failure', data.lastResult.includes("FAIL") || data.lastResult.includes("FRAUDULENT"));
+                msgBox.classList.toggle('success', !data.lastResult.includes("FAIL") && !data.lastResult.includes("FRAUDULENT"));
             } else {
                 msgBox.style.display = 'none';
             }
 
-            // 1. Manage Player List UI
+            // Player list
             listElement.innerHTML = '';
-            
             data.players.forEach((p, index) => {
                 const li = document.createElement('li');
                 const playerCard = document.createElement('div');
                 playerCard.className = 'player-card';
                 
                 const readyUI = document.getElementById('ready-ui');
-                if (myPlayerId && data.status === 'LOBBY') {
-                    readyUI.style.display = 'block';
-                } else {
-                    readyUI.style.display = 'none';
-                }
+                readyUI.style.display = (myPlayerId && data.status === 'LOBBY') ? 'block' : 'none';
 
                 if (!p.isAlive) {
-                    li.style.opacity = "0.4";
-                    li.innerHTML = `<span>💀 <del>${p.name}</del> (Fired)</span>`;
+                    li.style.opacity = "0.5";
+                    const nameEl = document.createElement('span');
+                    nameEl.className = 'player-name';
+                    nameEl.innerHTML = `💀 <del>${p.name}</del>`;
+                    playerCard.appendChild(nameEl);
+                    const statusEl = document.createElement('span');
+                    statusEl.className = 'player-status eliminated';
+                    statusEl.innerText = 'fired';
+                    playerCard.appendChild(statusEl);
                 } else {
-                    // Ready status
-                    let readyStatus = "";
+                    const nameEl = document.createElement('span');
+                    nameEl.className = 'player-name';
+                    nameEl.innerText = p.name;
+                    playerCard.appendChild(nameEl);
+
+                    const statusEl = document.createElement('span');
+                    statusEl.className = 'player-status';
                     if (data.status === 'LOBBY' && p.isReady) {
-                        readyStatus = " <b style='color: #4CAF50;'>(Ready)</b>";
+                        statusEl.classList.add('ready');
+                        statusEl.innerText = 'ready';
+                    } else if (data.status === 'VOTING' && data.votes[p.id] !== undefined) {
+                        statusEl.classList.add('voted');
+                        statusEl.innerText = 'voted';
                     }
-                    // Vote status
-                    let voteStatus = "";
-                    if (data.status === 'VOTING' && data.votes[p.id] !== undefined) {
-                        voteStatus = " (VOTED)";
-                    }
-                    // Fraudulent identity reveal
-                    let identityBadge = "";
+                    if (statusEl.innerText) playerCard.appendChild(statusEl);
+
+                    // Identity badge
                     if (p.identity && p.id !== myPlayerId) {
-                        const isTrickMeister = p.identity === 'Trick-Meister';
-                        const color = isTrickMeister ? '#ff9800' : '#F44336'; // Orange for TM, Red for Fraud
-                        identityBadge = ` <span style="color: ${color}; font-size: 0.7em; border: 1px solid ${color}; padding: 1px 4px; border-radius: 3px; margin-left: 5px;">${p.identity.toUpperCase()}</span>`;
+                        const badge = document.createElement('span');
+                        badge.className = 'badge badge-identity';
+                        badge.innerText = p.identity.toUpperCase();
+                        playerCard.appendChild(badge);
                     }
-                    playerCard.innerHTML = `<span>${p.name}${readyStatus}${voteStatus}${identityBadge}</span>`;
-                    listElement.appendChild(playerCard);
 
                     // Trader badge
                     if (data.status !== 'LOBBY' && index === data.traderIndex) {
-                        playerCard.innerHTML += `<span class="trader-badge">TRADER</span>`;
+                        const badge = document.createElement('span');
+                        badge.className = 'badge badge-trader';
+                        badge.innerText = 'trader';
+                        playerCard.appendChild(badge);
                     }
 
-                    // Supplier/Nominee Badges
+                    // Supplier badge
                     const isNominated = data.nominatedSupplierId === p.id;
-                    if (isNominated) {
-                        if (data.status === 'VOTING') {
-                            li.style.borderLeft = "5px solid #2196F3";
-                        } else if (data.status === 'LEGISLATIVE' || data.status === 'POWER') {
-                            // The vote passed! Show the full Supplier Badge
-                            playerCard.innerHTML += `<span class="supplier-tag">SUPPLIER</span>`;
-                        }
+                    if (isNominated && (data.status === 'LEGISLATIVE' || data.status === 'POWER')) {
+                        const badge = document.createElement('span');
+                        badge.className = 'badge badge-supplier';
+                        badge.innerText = 'supplier';
+                        playerCard.appendChild(badge);
                     }
                 }
                 li.appendChild(playerCard);
                 listElement.appendChild(li);
             });
 
-            // 2. Handle Identity Reveal
+            // Identity Reveal
             const me = data.players.find(p => p.id === myPlayerId);
             if (me && me.identity) {
                 const card = document.getElementById('role-card');
                 const roleDisplay = document.getElementById('myRole');
                 card.style.display = 'block';
                 roleDisplay.innerText = me.identity.toUpperCase();
-                roleDisplay.style.color = (me.identity === 'Authentic') ? '#4CAF50' : '#F44336';
+                roleDisplay.style.color = (me.identity === 'Authentic') ? 'var(--clr-authentic)' : 'var(--clr-fraudulent)';
             }
 
-            // 4. Election Logic (If I am the Trader)
+            // Election Logic
             const electionUI = document.getElementById('election-ui');
             const candidateZone = document.getElementById('supplier-candidates');
             const isMyTurn = (data.status === 'ELECTION' && data.players[data.traderIndex].id === myPlayerId);
@@ -348,10 +920,10 @@
                 if (candidateZone.children.length === 0) {
                     candidateZone.innerHTML = ''; 
                     data.players.forEach(p => {
-                        if (p.id !== myPlayerId) { // Can't nominate yourself
+                        if (p.id !== myPlayerId) {
                             const btn = document.createElement('button');
-                            btn.innerText = `${p.name}`;
-                            btn.style.margin = '5px';
+                            btn.className = 'btn-primary';
+                            btn.innerText = p.name;
                             btn.onclick = () => nominateSupplier(p.id);
                             candidateZone.appendChild(btn);
                         }
@@ -362,7 +934,7 @@
                 candidateZone.innerHTML = '';
             }
             
-            // 5. Voting Logic
+            // Voting Logic
             const votingUI = document.getElementById('voting-ui');
             const votingAnnounce = document.getElementById('voting-announcement');
             const votingButtons = document.querySelectorAll('#voting-ui button');
@@ -375,44 +947,34 @@
                     votingButtons.forEach(b => b.style.display = 'none');
                 } else {
                     const supplier = data.players.find(p => p.id === data.nominatedSupplierId);
-                    const name = supplier ? supplier.name : "the nominee";
-                    votingAnnounce.innerText = `VOTE: Should ${supplier.name} be the Supplier?`;
-                    votingButtons.forEach(b => b.style.display = 'inline-block');
+                    votingAnnounce.innerText = `Should ${supplier.name} be the Supplier?`;
+                    votingButtons.forEach(b => b.style.display = 'inline-flex');
                 }
             } else {
                 votingUI.style.display = 'none';
-                votingButtons.forEach(b => b.style.display = 'inline-block');
+                votingButtons.forEach(b => b.style.display = 'inline-flex');
             }
 
-            // 6. Legislative Logic (Card Hand)
+            // Legislative Logic
             const legUI = document.getElementById('legislative-ui');
             const handContainer = document.getElementById('policy-hand');
             const handInstruction = document.getElementById('hand-instruction');
 
-            // Check if I am the Trader or the Supplier
             const isTrader = data.players[data.traderIndex].id === myPlayerId;
             const isSupplier = data.nominatedSupplierId === myPlayerId;
 
             if (data.status === 'LEGISLATIVE' && (isTrader || isSupplier)) {
                 legUI.style.display = 'block';
-                // Only show the hand to the person whose turn it is
                 const isTraderTurn = data.hand.length === 3;
                 const isSupplierTurn = data.hand.length === 2;
 
-                if (isTrader){
-                    if(isTraderTurn) {
-                    handInstruction.innerText = "TRADER: Discard 1 card";
-                    } else {
-                        handInstruction.innerText = "Waiting for Supplier to select batch...";
-                    }
+                if (isTrader) {
+                    handInstruction.innerText = isTraderTurn ? "you: select batch to discard" : "waiting for supplier...";
                 } else if (isSupplier) {
-                    if (isSupplierTurn) {
-                    handInstruction.innerText = "SUPPLIER: Discard 1 card";
-                    } else {
-                    handInstruction.innerText = "Waiting for Trader to discard...";
-                    }
+                    handInstruction.innerText = isSupplierTurn ? "you: select batch to discard" : "waiting for trader...";
                 }
-                if((isTrader && isTraderTurn) || (isSupplier && isSupplierTurn)) {
+
+                if ((isTrader && isTraderTurn) || (isSupplier && isSupplierTurn)) {
                     handContainer.innerHTML = '';
                     data.hand.forEach((policy, index) => {
                         const card = document.createElement('div');
@@ -428,31 +990,22 @@
                 legUI.style.display = 'none';
             }
 
-            // Update Scoreboard
+            // Scoreboard
             document.getElementById('score-auth').innerText = `${data.scores.authentic} / 5`;
             document.getElementById('score-fraud').innerText = `${data.scores.fraudulent} / 6`;
-            // Hide/Show Board based on game status
-            const scoreboard = document.getElementById('scoreboard');
-            if (data.status === 'LOBBY') {
-                scoreboard.style.display = 'none';
-            } else {
-                scoreboard.style.display = 'flex';
-            }
+            document.getElementById('scoreboard').style.display = data.status === 'LOBBY' ? 'none' : 'grid';
 
-            // 7. Power Phase Logic
+            // Power Phase Logic
             const powerUI = document.getElementById('power-ui');
             const privateResult = document.getElementById('private-result');
             const targetZone = document.getElementById('power-targets');
 
-            // Show private result to Trader if it exists
             if (data.powerResult && isTrader && data.status !== 'END') {
                 privateResult.style.display = 'block';
                 privateResult.innerHTML = `
-                <div style="font-weight:bold; color:#4db6ac;">👁️ PRIVATE INTEL:</div>
-                <div style="margin: 10px 0;">${data.powerResult}</div>
-                <button onclick="endPowerTurn()" style="padding:5px 10px; background:#4db6ac; font-size:0.8em;">
-                    OK, Start Next Round
-                </button>
+                <div>👁️ private intel</div>
+                <div style="margin: var(--space-md) 0;">${data.powerResult}</div>
+                <button class="btn-secondary" onclick="endPowerTurn()" style="margin-top: var(--space-md); width: 100%;">continue</button>
                 `;
             } else {
                 privateResult.style.display = 'none';
@@ -468,22 +1021,23 @@
                         if (p.id !== myPlayerId && p.isAlive) {
                             const btn = document.createElement('button');
                             if (data.activePower === 'EXECUTION') {
-                                btn.innerText = `FIRE ${p.name}`;
-                                btn.style.background = "#000";
+                                btn.className = 'btn-danger';
+                                btn.innerText = `fire ${p.name}`;
                             } else if (data.activePower === 'INVESTIGATE') {
-                                btn.innerText = `Investigate ${p.name}`;
+                                btn.className = 'btn-secondary';
+                                btn.innerText = `investigate ${p.name}`;
                             } else if (data.activePower === 'SPECIAL_ELECTION') {
-                                btn.innerText = `Appoint ${p.name}`;
-                                btn.style.background = "#2196F3";
+                                btn.className = 'btn-secondary';
+                                btn.innerText = `appoint ${p.name}`;
                             }
-                            btn.style.margin = '5px';
                             btn.onclick = () => usePower(p.id);
                             targetZone.appendChild(btn);
                         }
                     });
                 } else if (data.activePower === 'POLICY_PEEK') {
                     const btn = document.createElement('button');
-                    btn.innerText = "View Top 3 Cards";
+                    btn.className = 'btn-secondary';
+                    btn.innerText = "view top 3 cards";
                     btn.onclick = () => usePower(null);
                     targetZone.appendChild(btn);
                 }
@@ -491,7 +1045,7 @@
                 powerUI.style.display = 'none';
             }
 
-            // 8. Funds Tracker
+            // Funds Tracker
             const fundsDisplay = document.getElementById('funds-amount');
             const fundsTracker = document.getElementById('funds-tracker');
             
@@ -500,14 +1054,7 @@
             } else {
                 fundsTracker.style.display = 'block';
                 fundsDisplay.innerText = `€${data.funds}M`;
-            
-                if (data.funds <= 1) {
-                    fundsDisplay.style.color = "#f44336";
-                    fundsTracker.style.borderColor = "#f44336";
-                } else {
-                    fundsDisplay.style.color = "white";
-                    fundsTracker.style.borderColor = "gold";
-                }
+                fundsTracker.classList.toggle('warning', data.funds <= 1);
             }
 
         } catch (err) {
@@ -562,20 +1109,16 @@
     window.onload = async () => {
         const savedId = localStorage.getItem('dirtyMoneyPlayerId');
         if (savedId) {
-            // Verify with server if this ID is still in the current game
             const response = await fetch(`/game-state?playerId=${savedId}`);
             const data = await response.json();
-            
-            // Find if I am actually in the player list
             const stillInGame = data.players.find(p => p.id === savedId);
             
             if (stillInGame) {
                 myPlayerId = savedId;
                 document.getElementById('setup-ui').innerHTML = 
-                    `<p style="color: #4CAF50;">✅ Reconnected as <b>${stillInGame.name}</b></p>`;
+                    `<p style="color: var(--clr-authentic); font-family: var(--font-display); text-transform: uppercase;">✓ Reconnected as <b>${stillInGame.name}</b></p>`;
                 console.log("Reconnected successfully:", myPlayerId);
             } else {
-                // ID is old/invalid, clear it
                 localStorage.removeItem('dirtyMoneyPlayerId');
             }
         }
