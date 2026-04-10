@@ -51,7 +51,7 @@
     </div>
     
     <div id="ready-ui" style="display:none; margin-top: 20px;">
-        <button id="readyBtn" onclick="toggleReady()" style="background: #2e7d32; width: 100%;">READY UP</button>
+        <button id="readyBtn" onclick="toggleReady()" style="background: #2e7d32; width: 100%;">READY</button>
     </div>
 
     <div id="voting-ui" class="election-zone" style="display: none; border-color: #2196F3;">
@@ -121,7 +121,8 @@
 
             if (response.ok) {
                 const data = await response.json();
-                myPlayerId = data.id; // Store the ID
+                myPlayerId = data.id;
+                localStorage.setItem('dirtyMoneyplayerId', myPlayerId);
                 document.getElementById('setup-ui').innerHTML = `<p style="color: #4CAF50;">✅ Joined as <b>${name}</b></p>`;
                 console.log("Joined successfully! ID assigned:", myPlayerId);
                 refreshLobby();
@@ -156,7 +157,7 @@
 
         if (response.ok) {
             const data = await response.json();
-            btn.innerText = data.isReady ? "UNREADY" : "READY UP";
+            btn.innerText = data.isReady ? "UNREADY" : "READY";
             btn.style.background = data.isReady ? "#f44336" : "#2e7d32";
         }
     }
@@ -557,6 +558,28 @@
         });
         refreshLobby();
     }
+
+    window.onload = async () => {
+        const savedId = localStorage.getItem('dirtyMoneyPlayerId');
+        if (savedId) {
+            // Verify with server if this ID is still in the current game
+            const response = await fetch(`/game-state?playerId=${savedId}`);
+            const data = await response.json();
+            
+            // Find if I am actually in the player list
+            const stillInGame = data.players.find(p => p.id === savedId);
+            
+            if (stillInGame) {
+                myPlayerId = savedId;
+                document.getElementById('setup-ui').innerHTML = 
+                    `<p style="color: #4CAF50;">✅ Reconnected as <b>${stillInGame.name}</b></p>`;
+                console.log("Reconnected successfully:", myPlayerId);
+            } else {
+                // ID is old/invalid, clear it
+                localStorage.removeItem('dirtyMoneyPlayerId');
+            }
+        }
+    };
 
     document.getElementById('playerName').focus();
     setInterval(refreshLobby, 2000);

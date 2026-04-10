@@ -22,3 +22,7 @@ Thumbs.db
 .env.local
 
 ToDO
+
+# Impeccable
+.github
+.impeccable.md
