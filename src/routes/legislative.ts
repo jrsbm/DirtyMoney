@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { gameState } from '../state';
-import { adjustFunds, rotateTrader, triggerPowerLogic, checkWinConditions } from '../gameLogic';
+import { adjustFunds, rotateTrader, triggerPowerLogic, checkWinConditions, processBankruptcy } from '../gameLogic';
 
 const router = express.Router();
 
@@ -129,6 +129,17 @@ router.post('/end-power', (req: Request, res: Response) => {
     const isTrader = gameState.players[gameState.traderIndex].id === playerId;
 
     if (!isTrader) return res.status(403).json({ error: "Forbidden" });
+
+    gameState.powerResult = null;
+    gameState.activePower = null;
+    // Fraudulent-bankruptcy-fraudulent power chain
+    if (gameState.funds <= 0) {
+        processBankruptcy();
+        if (gameState.status === 'POWER') {
+            return res.json({ message: "Power resolved, but Bankruptcy triggered a new Power!" });
+        }
+    }
+
     gameState.status = 'ELECTION';
 
     if (gameState.tempNextTrader !== null) {

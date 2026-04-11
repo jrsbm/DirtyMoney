@@ -15,14 +15,14 @@ router.post('/join', (req, res) => {
     }
 
     const cleanName = name.trim();
-/*    const existingPlayer = gameState.players.find(
+    const existingPlayer = gameState.players.find(
         p => p.name.toLowerCase() === cleanName.toLowerCase()
     );
     if (existingPlayer) {
         console.log(`${cleanName} reconnected.`);
         return res.json(existingPlayer); 
     }
-*/
+
     const nameExists = gameState.players.some(
         p => p.name.toLowerCase() === cleanName.toLowerCase()
     );

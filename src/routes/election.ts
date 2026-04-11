@@ -55,9 +55,9 @@ router.post('/vote', (req: Request, res: Response) => {
     const livingPlayers = gameState.players.filter(p => p.isAlive);
     if (Object.keys(gameState.votes).length === livingPlayers.length){
         const yesVotes = Object.values(gameState.votes).filter(v => v === true).length;
-        const totalPlayers = gameState.players.length;
+        const playersAlive = livingPlayers.length;
 
-        if (yesVotes > totalPlayers / 2) {
+        if (yesVotes > playersAlive / 2) {
             // SUCCESS: Election Passes
             console.log("Election Passed!");
             gameState.lastResult = 'PASS';

@@ -31,6 +31,16 @@ export function adjustFunds(amount: number) {
     console.log(`Funds adjusted by ${amount}M. Current: €${gameState.funds}M`);
 
     if (gameState.funds <= 0) {
+        if (gameState.status === 'POWER') {
+            console.log("Bankruptcy pending: Waiting for Power to resolve first.");
+            return;
+        } 
+        processBankruptcy();
+    }
+}
+
+export function processBankruptcy() {
+    if (gameState.funds > 0) return;
         // Penalty: Enact the top card of the deck automatically
         const enacted = gameState.policyDeck.shift();
         if (enacted) {
@@ -43,18 +53,12 @@ export function adjustFunds(amount: number) {
 
             if (enacted === 'Fraudulent') {
                 triggerPowerLogic();
-                if (gameState.activePower) {
-                    gameState.lastResult += ` (New Power: ${gameState.activePower.replace('_', ' ')})`;
-                }
             }
         }
         
-        // Reset funds
-        gameState.funds = 3;
-        // Check for wins after the forced card
-        checkWinConditions(); 
-    }
-}
+        gameState.funds = 3; // Reset funds
+        checkWinConditions(); // Check for wins after the forced card
+};
 
 export function startGameLogic() {
     const playerCount = gameState.players.length;

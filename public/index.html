@@ -920,7 +920,7 @@
                 if (candidateZone.children.length === 0) {
                     candidateZone.innerHTML = ''; 
                     data.players.forEach(p => {
-                        if (p.id !== myPlayerId) {
+                        if (p.id !== myPlayerId && p.isAlive) {
                             const btn = document.createElement('button');
                             btn.className = 'btn-primary';
                             btn.innerText = p.name;
@@ -938,7 +938,7 @@
             const votingUI = document.getElementById('voting-ui');
             const votingAnnounce = document.getElementById('voting-announcement');
             const votingButtons = document.querySelectorAll('#voting-ui button');
-            if (data.status === 'VOTING' && data.nominatedSupplierId) {
+            if (data.status === 'VOTING' && data.nominatedSupplierId && me.isAlive) {
                 votingUI.style.display = 'block';
                 const haveVoted = data.votes && data.votes[myPlayerId] !== undefined;
 
@@ -1106,7 +1106,7 @@
         refreshLobby();
     }
 
-    window.onload = async () => {
+    /*window.onload = async () => {
         const savedId = localStorage.getItem('dirtyMoneyPlayerId');
         if (savedId) {
             const response = await fetch(`/game-state?playerId=${savedId}`);
@@ -1122,7 +1122,7 @@
                 localStorage.removeItem('dirtyMoneyPlayerId');
             }
         }
-    };
+    };*/
 
     document.getElementById('playerName').focus();
     setInterval(refreshLobby, 2000);
