@@ -63,6 +63,15 @@ async function toggleReady() {
     }
 }
 
+document.addEventListener('keypress', function (e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+    }
+    if (e.key.toLowerCase() === 'r') {
+        toggleReady();
+    }
+})
+
 async function nominateSupplier(targetId) {
     const response = await fetch('/nominate', {
         method: 'POST',
@@ -273,28 +282,44 @@ async function refreshLobby() {
         const isTrader = data.players[data.traderIndex].id === myPlayerId;
         const isSupplier = data.nominatedSupplierId === myPlayerId;
 
-        if (data.status === 'LEGISLATIVE' && (isTrader || isSupplier)) {
+        if (data.status === 'LEGISLATIVE') { 
             legUI.style.display = 'block';
             const isTraderTurn = data.hand.length === 3;
             const isSupplierTurn = data.hand.length === 2;
+            if (isTrader || isSupplier) {
+                if (isTrader) {
+                    handInstruction.innerText = isTraderTurn ? "you: select batch to discard" : "waiting for supplier...";
+                } else if (isSupplier) {
+                    handInstruction.innerText = isSupplierTurn ? "you: select batch to discard" : "waiting for trader...";
+                }
 
-            if (isTrader) {
-                handInstruction.innerText = isTraderTurn ? "you: select batch to discard" : "waiting for supplier...";
-            } else if (isSupplier) {
-                handInstruction.innerText = isSupplierTurn ? "you: select batch to discard" : "waiting for trader...";
-            }
-
-            if ((isTrader && isTraderTurn) || (isSupplier && isSupplierTurn)) {
-                handContainer.innerHTML = '';
-                data.hand.forEach((policy, index) => {
-                    const card = document.createElement('div');
-                    card.className = `policy-card card-${policy.toLowerCase()}`;
-                    card.innerText = policy;
-                    card.onclick = () => discardCard(index);
-                    handContainer.appendChild(card);
-                });
+                if ((isTrader && isTraderTurn) || (isSupplier && isSupplierTurn)) {
+                    handContainer.innerHTML = '';
+                    data.hand.forEach((policy, index) => {
+                        const card = document.createElement('div');
+                        card.className = `policy-card card-${policy.toLowerCase()}`;
+                        card.innerText = policy;
+                        card.onclick = () => discardCard(index);
+                        handContainer.appendChild(card);
+                    });
+                } else {
+                    handContainer.innerHTML = '';
+                }
             } else {
-                handContainer.innerHTML = '';
+                if (data.handCount === 3) {
+                    handInstruction.innerText = "Trader is inspecting the batch...";
+                    handContainer.innerHTML = `<div class="card-display">${getCardBackHTML()}${getCardBackHTML()}${getCardBackHTML()}</div>`;
+                } else if (data.handCount === 2) {
+                    handInstruction.innerText = "Supplier is choosing which batch to enact...";
+                    handContainer.innerHTML = `<div class="card-display">${getCardBackHTML()}${getCardBackHTML()}</div>`;
+                }
+                else if (data.lastResult.includes('AUTHENTIC') || data.lastResult.includes('FRAUDULENT')) {
+                    handInstruction.innerText = "Batch chosen!";
+                    const result = data.lastResult.includes('AUTHENTIC') ? 'authentic' : 'fraudulent';
+                    if (!document.getElementById('revealCard')) {
+                        renderFlipReveal(result);
+                    }
+                }
             }
         } else {
             legUI.style.display = 'none';
@@ -444,6 +469,48 @@ async function discardCard(index) {
         const err = await response.json();
         alert(err.error);
     }
+}
+
+function getCardBackHTML() {
+    return `
+        <div class="batch-card">
+            <div class="card-face card-back">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                    <circle cx="12" cy="12" r="2" />
+                    <path d="M6 12h.01M18 12h.01" />
+                </svg>
+            </div>
+        </div>
+    `;
+}
+
+function renderFlipReveal(enacted) {
+    const handContainer = document.getElementById('policy-hand');
+    const label = enacted === 'authentic' ? 'AUTHENTIC' : 'FRAUDULENT';
+    
+    handContainer.innerHTML = `
+        <div class="card-display">
+            <div class="batch-card" id="revealCard">
+                <div class="card-face card-back">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                        <circle cx="12" cy="12" r="2" />
+                        <path d="M6 12h.01M18 12h.01" />
+                    </svg>
+                </div>
+                <div class="card-face card-front policy-card card-${enacted}">
+                    ${label}
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Trigger the flip after a tiny delay so the eye can follow
+    setTimeout(() => {
+        const card = document.getElementById('revealCard');
+        if (card) card.classList.add('flipped');
+    }, 300);
 }
 
 async function usePower(targetId) {

@@ -19,6 +19,7 @@ export interface GameState {
     votes: Record<string, boolean>;
     lastResult: string | null;
     hand: Policy[];
+    handCount: number;
     scores: { authentic: number; fraudulent: number };
     boardType: 'small' | 'medium' | 'large';
     activePower: string | null;

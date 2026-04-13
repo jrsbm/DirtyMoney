@@ -10,6 +10,7 @@ export let gameState: GameState = {
     votes: {},
     lastResult: null,
     hand: [],
+    handCount: 0,
     scores: { authentic: 0, fraudulent: 0 },
     boardType: 'small',
     activePower: null,

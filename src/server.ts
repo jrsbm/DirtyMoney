@@ -59,6 +59,7 @@ app.get('/game-state', (req: Request, res: Response) => {
 
     if (gameState.status === 'LEGISLATIVE') {
         if ((gameState.hand.length === 3 && !isTrader) || (gameState.hand.length === 2 && !isSupplier)) {
+            safeState.handCount = gameState.hand.length;
             safeState.hand = []; // Hide cards from unauthorized eyes
         }
     } else {
