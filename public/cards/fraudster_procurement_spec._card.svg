@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg 
+    width="2.5in" 
+    height="3.5in" 
+    viewBox="0 0 225 315"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+    
+    <metadata>
+        <rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title>Dirty Money - PROCUREMENT SPEC.</dc:title></cc:Work></rdf:RDF>
+    </metadata>
+
+    <!-- Card base -->
+    <rect x="0" y="0" width="225" height="315" rx="8" fill="#200a0a" />
+    <rect x="1" y="1" width="223" height="313" rx="7" fill="none" stroke="#ba293b" stroke-width="0.8" opacity="0.3"/>
+    
+    <!-- Top decorative line -->
+    <line x1="20" y1="15" x2="205" y2="15" stroke="#ba293b" stroke-width="1" opacity="0.6" />
+    
+    <!-- Header -->
+    <text x="112.5" y="32" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#ba293b" text-anchor="middle" letter-spacing="1">DIRTY MONEY</text>
+    <text x="112.5" y="42" font-family="Courier New, monospace" font-size="7" fill="#ba293b" text-anchor="middle" opacity="0.6">CONFIDENTIAL</text>
+    
+    <!-- Divider -->
+    <line x1="30" y1="50" x2="195" y2="50" stroke="#ba293b" stroke-width="0.5" opacity="0.4" />
+    
+    <!-- Person Silhouette - Head and shoulders -->
+    <g transform="translate(112.5, 130)">
+        <!-- Head circle -->
+        <circle cx="0" cy="-25" r="22" fill="none" stroke="#ba293b" stroke-width="1.2" opacity="0.7"/>
+        
+        <!-- Shoulders/Body -->
+        <path d="M -35 25 Q -35 5 -20 0 Q 0 -5 20 0 Q 35 5 35 25" 
+              fill="none" stroke="#ba293b" stroke-width="1" opacity="0.6"/>
+        
+        <!-- Collar detail -->
+        <path d="M -15 5 Q 0 12 15 5" fill="none" stroke="#ba293b" stroke-width="0.8" opacity="0.5"/>
+    </g>
+    
+    <!-- Role Title -->
+    <text x="112.5" y="175" font-family="Georgia, serif" font-size="14" font-weight="bold" fill="#ba293b" text-anchor="middle" letter-spacing="0.5">PROCUREMENT SPEC.</text>
+    
+    <!-- Decorative line -->
+    <line x1="60" y1="182" x2="165" y2="182" stroke="#ba293b" stroke-width="0.8" opacity="0.4" />
+    
+    <!-- Role description -->
+    <text x="112.5" y="195" font-family="Arial, sans-serif" font-size="7" fill="#ba293b" text-anchor="middle" opacity="0.8">Drives a slightly too expensive car...</text>
+    
+    <!-- Team indicator -->
+    <g transform="translate(112.5, 250)">
+        <rect x="-60" y="-15" width="120" height="30" rx="3" fill="none" stroke="#ba293b" stroke-width="0.8" opacity="0.5"/>
+        <text x="0" y="4" font-family="Courier New, monospace" font-size="20" fill="#ba293b" text-anchor="middle" font-weight="bold">
+            FRAUDSTER
+        </text>
+    </g>
+    
+    <!-- Footer -->
+    <text x="112.5" y="295" font-family="Courier New, monospace" font-size="5" fill="#ba293b" text-anchor="middle" opacity="0.4">KEEP YOUR IDENTITY SECRET</text>
+</svg>

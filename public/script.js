@@ -344,7 +344,7 @@ async function refreshLobby() {
                 
                 const miniCard = document.createElement('div');
                 miniCard.className = 'mini-card card-authentic';
-                miniCard.innerText = 'AUTHENTIC \nBATCH';
+                miniCard.innerText = `<img src="authentic_card.svg" style="width: 100%; height: 100%; border-radius: 2px;">`;
                 
                 square.appendChild(miniCard);
                 
@@ -368,7 +368,7 @@ async function refreshLobby() {
                 
                 const miniCard = document.createElement('div');
                 miniCard.className = 'mini-card card-fraudulent';
-                miniCard.innerText = 'FRAUDULENT \nBATCH';
+                miniCard.innerText = `<img src="fraudulent_card.svg" style="width: 100%; height: 100%; border-radius: 2px;">`;
                 
                 square.appendChild(miniCard);
                 
@@ -487,7 +487,7 @@ function getCardBackHTML() {
 
 function renderFlipReveal(enacted) {
     const handContainer = document.getElementById('policy-hand');
-    const label = enacted === 'authentic' ? 'AUTHENTIC' : 'FRAUDULENT';
+    const svgUrl = enacted === 'authentic' ? 'authentic_card.svg' : 'fraudulent_card.svg';
     
     handContainer.innerHTML = `
         <div class="card-display">
@@ -500,7 +500,7 @@ function renderFlipReveal(enacted) {
                     </svg>
                 </div>
                 <div class="card-face card-front policy-card card-${enacted}">
-                    ${label}
+                    <img src="${svgUrl}" alt="${enacted}" style="width: 100%; height: 100%; border-radius: 8px;">
                 </div>
             </div>
         </div>

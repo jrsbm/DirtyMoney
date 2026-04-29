@@ -1,0 +1,126 @@
+import os
+
+def create_card(card_type, bg_color, accent_color):
+    # Standard Card Size: 2.5 x 3.5 inches (225 x 315 px at 90dpi)
+    # Certificate of Analysis design with detective theme
+    svg_template = f"""<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg 
+    width="2.5in" 
+    height="3.5in" 
+    viewBox="0 0 225 315"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+    
+    <metadata>
+        <rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title>Dirty Money - {card_type}</dc:title></cc:Work></rdf:RDF>
+    </metadata>
+
+    <!-- Card base -->
+    <rect id="card-base" x="0" y="0" width="225" height="315" rx="8" fill="{bg_color}" stroke="{accent_color}" stroke-width="1.5"/>
+    
+    <!-- Certificate header -->
+    <text x="112.5" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="{accent_color}" text-anchor="middle" letter-spacing="0.5">CERTIFICATE</text>
+    <text x="112.5" y="38" font-family="Arial, sans-serif" font-size="10" fill="{accent_color}" text-anchor="middle" opacity="0.8">OF ANALYSIS</text>
+    
+    <!-- Top divider -->
+    <line x1="15" y1="52" x2="210" y2="52" stroke="{accent_color}" stroke-width="0.8" opacity="0.6" />
+    
+    <!-- Batch metadata section -->
+    <text x="18" y="61" font-family="monospace" font-size="4.5" fill="{accent_color}" opacity="0.8">Product: Red Snapper (whole frozen)</text>
+    <text x="18" y="68" font-family="monospace" font-size="4.5" fill="{accent_color}" opacity="0.8">Code: OO-2026-847 </text>
+    <text x="18" y="75" font-family="monospace" font-size="4.5" fill="{accent_color}" opacity="0.8">Batch: BT-245093R </text>
+    <text x="18" y="82" font-family="monospace" font-size="4.5" fill="{accent_color}" opacity="0.8">Batch size: 150.000 L</text>
+    <text x="18" y="89" font-family="monospace" font-size="4.5" fill="{accent_color}" opacity="0.8">Manufactured: 2026-01</text>
+    <text x="18" y="96" font-family="monospace" font-size="4.5" fill="{accent_color}" opacity="0.8">Best before: 2027-01</text>
+     
+    <!-- Divider -->
+    <line x1="15" y1="102" x2="210" y2="102" stroke="{accent_color}" stroke-width="0.8" opacity="0.5" />
+    
+    <!-- Large verdict text -->
+    <text x="112.5" y="148" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="{accent_color}" text-anchor="middle" letter-spacing="1">{card_type}</text>
+    <text x="112.5" y="163" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="{accent_color}" text-anchor="middle">BATCH</text>
+    
+    <!-- Divider -->
+    <line x1="15" y1="188" x2="210" y2="188" stroke="{accent_color}" stroke-width="0.5" opacity="0.4" />
+    
+    <!-- Microbial Tests Header -->
+    <text x="18" y="196" font-family="Arial, sans-serif" font-size="5.5" font-weight="bold" fill="{accent_color}" opacity="0.9">MICROBIOLOGICAL</text>
+    <line x1="15" y1="198" x2="210" y2="198" stroke="{accent_color}" stroke-width="0.3" opacity="0.3" />
+    
+    <!-- Microbial test rows -->
+    <text x="18" y="206" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Aerobic Plate</text>
+    <text x="18" y="212" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Yeast/Mould</text>
+    <text x="18" y="218" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Salmonella</text>
+    <text x="18" y="224" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">E.coli:</text>
+    <text x="18" y="230" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Staph.A:</text>
+    
+    <text x="68" y="206" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">NMT 10,000 cfu/g</text>
+    <text x="68" y="212" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">NMT 1,000 cfu/g</text>
+    <text x="68" y="218" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Absent in 1mL</text>
+    <text x="68" y="224" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Absent in 1mL</text>
+    <text x="68" y="230" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Absent in 1mL</text>
+    
+    <text x="118" y="206" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">&#60;10 cfu/g</text>
+    <text x="118" y="212" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">40 cfu/g</text>
+    <text x="118" y="218" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Absent</text>
+    <text x="118" y="224" font-family="monospace" font-size="4" font-weight="bold" fill="{accent_color}" opacity="1">10 cfu/g</text>
+    <text x="118" y="230" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Absent</text>
+    
+    <text x="158" y="206" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">ICP-MS</text>
+    <text x="158" y="212" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">ICP-MS</text>
+    <text x="158" y="218" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">ICP-MS</text>
+    <text x="158" y="224" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">ICP-MS</text>
+    <text x="158" y="230" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">ICP-MS</text>
+    
+    <!-- Divider -->
+    <line x1="15" y1="233" x2="210" y2="233" stroke="{accent_color}" stroke-width="0.5" opacity="0.4" />
+    
+    <!-- Heavy Metals Header -->
+    <text x="18" y="241" font-family="Arial, sans-serif" font-size="5.5" font-weight="bold" fill="{accent_color}" opacity="0.9">HEAVY METALS</text>
+    <line x1="15" y1="243" x2="210" y2="243" stroke="{accent_color}" stroke-width="0.3" opacity="0.3" />
+    
+    <!-- Heavy metals test rows -->
+    <text x="18" y="251" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Lead</text>
+    <text x="18" y="257" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Mercury</text>
+    <text x="18" y="263" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Arsenic</text>
+    <text x="18" y="269" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Cadmium</text>
+    
+    <text x="48" y="251" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">NMT 2.75 mcg/daily dose</text>
+    <text x="48" y="257" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">NMT 10 mcg/daily dose</text>
+    <text x="48" y="263" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">NMT 10 mcg/daily dose</text>
+    <text x="48" y="269" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">NMT 4.1 mcg/daily dose</text>
+    
+    <text x="113" y="251" font-family="monospace" font-size="4" font-weight="bold" fill="{accent_color}" opacity="1">3.434 mcg/Serving</text>
+    <text x="113" y="257" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">0.003 mcg/Serving</text>
+    <text x="113" y="263" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">0.077 mcg/Serving</text>
+    <text x="113" y="269" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">0.298 mcg/Serving</text>
+    
+    <text x="168" y="251" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Lead</text>
+    <text x="168" y="257" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Mercury</text>
+    <text x="168" y="263" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Arsenic</text>
+    <text x="168" y="269" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Cadmium</text>
+       
+
+    <!-- Footer section -->
+    <!-- Left side: Signature and Quality Control -->
+    <line x1="18" y1="290" x2="100" y2="290" stroke="{accent_color}" stroke-width="0.8" opacity="0.5" />
+    <text x="18" y="296" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8">Quality Control</text>
+    
+    <!-- Right side: Date -->
+    <line x1="125" y1="290" x2="207" y2="290" stroke="{accent_color}" stroke-width="0.8" opacity="0.5" />
+    <text x="207" y="296" font-family="monospace" font-size="4" fill="{accent_color}" opacity="0.8" text-anchor="end">Date: 2026-04-16</text>
+</svg>
+"""
+    filename = f"{card_type.lower()}_card.svg"
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(svg_template)
+    print(f"Generated: {filename}")
+
+# Run the generator
+create_card("AUTHENTIC", "#0a1520", "#0070c4")
+create_card("FRAUDULENT", "#200a0a", "#ba293b")
+
