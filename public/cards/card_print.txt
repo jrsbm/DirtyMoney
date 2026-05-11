@@ -13,9 +13,12 @@ fraudster_dockworker_card		1
 fraudster_procurement_spec._card	1
 trickmeister_trick-meister_card		1
 
+trader_card				1
+trader_instructions			1
+supplier_card				1
+supplier_instructions			1
 
-President:		1
-Chancellor: 		1
-Previous president	1
-Previous chancellor	1
-Special rules		1
+
+& "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=CMYK -dProcessColorModel=/DeviceCMYK -dCompatibilityLevel=1.4 -sOutputFile=board_56combined_CMYK.pdf board_56combined.pdf
+
+& "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=CMYK -dProcessColorModel=/DeviceCMYK -dCompatibilityLevel=1.4 -sOutputFile=board_78combined_CMYK.pdf board_78combined.pdf
