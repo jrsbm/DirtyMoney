@@ -21,10 +21,10 @@ def make_slot_group(x, lines, accent_color):
     lines_svg = []
     for y, text, opacity in lines:
         lines_svg.append(
-            f'        <text x="116" y="{y}" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="{accent_color}" text-anchor="middle" opacity="{opacity}">{text}</text>'
+            f'        <text x="116" y="{y}" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="{accent_color}" text-anchor="middle" opacity="{opacity}">{text}</text>'
         )
     return f"""    <g transform=\"translate({x}, 116)\">
-        <rect x=\"0\" y=\"0\" width=\"232\" height=\"315\" rx=\"13\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"2\" opacity=\"0.35\"/>
+        <rect x=\"0\" y=\"0\" width=\"232\" height=\"315\" rx=\"13\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"5\" opacity=\"1\"/>
 {chr(10).join(lines_svg)}
     </g>
 """
@@ -33,9 +33,6 @@ def make_slot_group(x, lines, accent_color):
 def build_auth_board(bg_color, accent_color, board_name, y_offset=0, mirrored=False, pattern_id="border-pattern"):
     tx = mirror_x if mirrored else (lambda x, width=0: x)
 
-    # Adjust for 1mm shifts (≈4px): discard moved 1mm right, draw moved 1mm left
-    discard_x = tx(11, 123)  # 10 + 1
-    draw_x = tx(1568, 123)   # 1575 - 7
     discard_text_x = tx(72)  # 71 + 1
     draw_text_x = tx(1630)   # 1637 - 7
 
@@ -66,15 +63,13 @@ def build_auth_board(bg_color, accent_color, board_name, y_offset=0, mirrored=Fa
         slot_origins = [mirror_x(x, 232) for x in slot_origins]
 
     slot_groups = [
-        [(166, "SLOT 1", 0.35)],
-        [(166, "SLOT 2", 0.35)],
-        [(166, "SLOT 3", 0.35)],
-        [(166, "SLOT 4", 0.35)],
+        [(166, "SLOT 1", 1)],
+        [(166, "SLOT 2", 1)],
+        [(166, "SLOT 3", 1)],
+        [(166, "SLOT 4", 1)],
         [
-            (50, "Authentic team wins!", 1),
-            (166, "SLOT 5", 0.35),
-            (265, "Authentic food", 1),
-            (290, "perseveres", 1),
+            (151, "Authentic", 1),
+            (181, "team wins!", 1),
         ],
     ]
 
@@ -83,27 +78,23 @@ def build_auth_board(bg_color, accent_color, board_name, y_offset=0, mirrored=Fa
         slot_blocks.append(make_slot_group(x, lines, accent_color))
 
     return f"""    <g transform=\"translate({BLEED_OFFSET}, {y_offset + BLEED_OFFSET + 1})\">
-        <rect x=\"0\" y=\"0\" width=\"{ARTWORK_WIDTH}\" height=\"{BOARD_HEIGHT}\" rx=\"17\" fill=\"{bg_color}\" />
-
-        <rect x=\"{discard_x}\" y=\"10\" width=\"123\" height=\"502\" rx=\"13\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"2\" opacity=\"0.5\" />
+        <rect x=\"11\" y=\"10\" width=\"123\" height=\"502\" rx=\"13\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"5\" opacity=\"1\" />
         <text x=\"{discard_text_x}\" y=\"277\" font-family=\"Georgia, serif\" font-size=\"33\" font-weight=\"bold\" fill=\"{accent_color}\" text-anchor=\"middle\" transform=\"rotate(-90 {discard_text_x} 261)\">DISCARD PILE</text>
-        <path d=\"{discard_arrow_path}\" fill=\"{accent_color}\" opacity=\"0.7\" />
+        <path d=\"{discard_arrow_path}\" fill=\"{accent_color}\" opacity=\"1\" />
 {chr(10).join(discard_cards)}
 
-        <rect x=\"{draw_x}\" y=\"10\" width=\"123\" height=\"502\" rx=\"13\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"2\" opacity=\"0.5\" />
+        <rect x=\"1568\" y=\"10\" width=\"123\" height=\"502\" rx=\"13\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"5\" opacity=\"1\" />
         <text x=\"{draw_text_x}\" y=\"277\" font-family=\"Georgia, serif\" font-size=\"37\" font-weight=\"bold\" fill=\"{accent_color}\" text-anchor=\"middle\" transform=\"rotate(90 {draw_text_x} 261)\">DRAW PILE</text>
-        <path d=\"{draw_arrow_path}\" fill=\"{accent_color}\" opacity=\"0.7\" />
+        <path d=\"{draw_arrow_path}\" fill=\"{accent_color}\" opacity=\"1\" />
 {chr(10).join(draw_cards)}
 
-        <rect x=\"143\" y=\"10\" width=\"1415\" height=\"502\" rx=\"13\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"2\" opacity=\"0.5\" />
-        <rect x=\"153\" y=\"20\" width=\"1395\" height=\"482\" rx=\"3\" fill=\"none\" stroke=\"url(#{pattern_id})\" stroke-width=\"17\" opacity=\"0.45\" />
+        <rect x=\"143\" y=\"10\" width=\"1415\" height=\"502\" rx=\"13\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"5\" opacity=\"1\" />
+        <rect x=\"153\" y=\"20\" width=\"1395\" height=\"482\" rx=\"3\" fill=\"none\" stroke=\"url(#{pattern_id})\" stroke-width=\"24\" opacity=\"1\" />
 
         <text x=\"{title_x}\" y=\"75\" font-family=\"Georgia, serif\" font-size=\"40\" font-weight=\"bold\" fill=\"{accent_color}\" letter-spacing=\"2\">{board_name}</text>
-        <line x1=\"{line_x1}\" y1=\"86\" x2=\"{line_x2}\" y2=\"86\" stroke=\"{accent_color}\" stroke-width=\"2\" opacity=\"0.4\" />
+        <line x1=\"{line_x1}\" y1=\"86\" x2=\"{line_x2}\" y2=\"86\" stroke=\"{accent_color}\" stroke-width=\"5\" opacity=\"1\" />
 
 {''.join(slot_blocks)}
-
-        <text x=\"1492\" y=\"489\" font-family=\"Courier New, monospace\" font-size=\"10\" fill=\"{accent_color}\" text-anchor=\"end\" opacity=\"0.4\">DIRTY MONEY</text>
     </g>
 """
 
@@ -118,41 +109,38 @@ def build_fraud_board(bg_color, accent_color, board_name, y_offset=0, mirrored=F
     if line_x1 > line_x2:
         line_x1, line_x2 = line_x2, line_x1
 
-    win_bar_x = tx(893, 713)  # 895 - 2
-    win_text_x = tx(978)
-    players_bar_x = tx(375)  # 373 + 2
-    players_text_x = tx(385)  # 373 + 12
-
     slot_origins = [75, 340, 605, 870, 1135, 1401]
     if mirrored:
         slot_origins = [mirror_x(x, 232) for x in slot_origins]
 
     slot_groups = [
-        [(166, "SLOT 1", 0.35)],
-        [(166, "SLOT 2", 0.35)],
+        [(166, "SLOT 1", 1)],
+        [(166, "SLOT 2", 1)],
         [
-            (50, "Authenticity test", 1),
-            (166, "SLOT 3", 0.35),
-            (265, "The trader examines", 1),
-            (290, "the top 3 cards", 1),
+            (50, "Authenticity", 1),
+            (75, "test", 1),
+            (215, "The trader", 1),
+            (240, "examines", 1),
+            (265, "the top", 1),
+            (290, "3 cards", 1),
         ],
         [
-            (50, "Reorganisation", 1),
-            (166, "SLOT 4", 0.35),
-            (265, "The trader must", 1),
-            (290, "fire a player", 1),
+            (50, "Reorgani", 1),
+            (75, "-sation", 1),
+            (215, "The trader", 1),
+            (240, "must fire", 1),
+            (265, "a player", 1),
         ],
         [
-            (50, "Reorganisation", 1),
-            (166, "SLOT 5", 0.35),
-            (265, "The trader must", 1),
-            (290, "fire a player", 1),
+            (50, "Reorgani", 1),
+            (75, "-sation", 1),
+            (215, "The trader", 1),
+            (240, "must fire", 1),
+            (265, "a player", 1),
         ],
         [
-            (50, "Fraudsters win!", 1),
-            (166, "SLOT 6", 0.35),
-            (265, "The supply chain has", 1),
-            (290, "been fully infiltrated", 1),
+            (151, "Fraudster", 1),
+            (181, "team wins!", 1),
         ],
     ]
 
@@ -161,22 +149,18 @@ def build_fraud_board(bg_color, accent_color, board_name, y_offset=0, mirrored=F
         slot_blocks.append(make_slot_group(x, lines, accent_color))
 
     return f"""    <g transform=\"translate({BLEED_OFFSET}, {y_offset})\">
-        <rect x=\"0\" y=\"0\" width=\"{ARTWORK_WIDTH}\" height=\"{BOARD_HEIGHT}\" rx=\"17\" fill=\"{bg_color}\" />
-
-        <rect x=\"10\" y=\"10\" width=\"1680\" height=\"502\" rx=\"13\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"2\" opacity=\"0.5\" />
-        <rect x=\"20\" y=\"20\" width=\"1660\" height=\"482\" rx=\"3\" fill=\"none\" stroke=\"url(#{pattern_id})\" stroke-width=\"17\" opacity=\"0.45\" />
+        <rect x=\"10\" y=\"10\" width=\"1680\" height=\"502\" rx=\"13\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"5\" opacity=\"1\" />
+        <rect x=\"20\" y=\"20\" width=\"1660\" height=\"482\" rx=\"3\" fill=\"none\" stroke=\"url(#{pattern_id})\" stroke-width=\"24\" opacity=\"1\" />
 
         <text x=\"{title_x}\" y=\"75\" font-family=\"Georgia, serif\" font-size=\"40\" font-weight=\"bold\" fill=\"{accent_color}\" letter-spacing=\"2\">{board_name}</text>
-        <line x1=\"{line_x1}\" y1=\"86\" x2=\"{line_x2}\" y2=\"86\" stroke=\"{accent_color}\" stroke-width=\"2\" opacity=\"0.4\" />
+        <line x1=\"{line_x1}\" y1=\"86\" x2=\"{line_x2}\" y2=\"86\" stroke=\"{accent_color}\" stroke-width=\"5\" opacity=\"1\" />
 
-        <rect x=\"{win_bar_x}\" y=\"66\" width=\"713\" height=\"13\" rx=\"3\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"17\" opacity=\"0.65\" />
-        <text x=\"{win_text_x}\" y=\"76\" font-family=\"Courier New, monospace\" font-size=\"16\" font-weight=\"bold\" fill=\"{bg_color}\" opacity=\"0.8\">FRAUDSTERS WIN IF TRICK-MEISTER IS ELECTED AS SUPPLIER</text>
+        <rect x=\"893\" y=\"66\" width=\"713\" height=\"13\" rx=\"3\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"17\" opacity=\"1\" />
+        <text x=\"893\" y=\"78\" font-family=\"Courier New, monospace\" font-size=\"22\" font-weight=\"bold\" fill=\"{bg_color}\" opacity=\"1\">FRAUDSTERS WIN IF TRICK-MEISTER IS ELECTED AS SUPPLIER</text>
 
 {''.join(slot_blocks)}
-        <rect x=\"{players_bar_x}\" y=\"464\" width=\"957\" height=\"13\" rx=\"3\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"17\" opacity=\"0.65\" />
-        <text x=\"{players_text_x}\" y=\"474\" font-family=\"Courier New, monospace\" font-size=\"16\" font-weight=\"bold\" fill=\"{bg_color}\" opacity=\"0.8\">5 OR 6 PLAYERS: PLAY WITH 1 FRAUDSTER AND TRICK-MEISTER, TRICK-MEISTER KNOWS WHO THE FRAUDSTER IS</text>
-
-        <text x=\"1625\" y=\"489\" font-family=\"Courier New, monospace\" font-size=\"10\" fill=\"{accent_color}\" text-anchor=\"end\" opacity=\"0.4\">DIRTY MONEY</text>
+        <rect x=\"225\" y=\"462\" width=\"1297\" height=\"13\" rx=\"3\" fill=\"none\" stroke=\"{accent_color}\" stroke-width=\"17\" opacity=\"1\" />
+        <text x=\"235\" y=\"474\" font-family=\"Courier New, monospace\" font-size=\"22\" font-weight=\"bold\" fill=\"{bg_color}\" opacity=\"1\">5 OR 6 PLAYERS: PLAY WITH 1 FRAUDSTER AND TRICK-MEISTER, TRICK-MEISTER KNOWS WHO THE FRAUDSTER IS</text>
     </g>
 """
 
@@ -204,11 +188,11 @@ def create_policy_board(board_type, bg_color, accent_color, board_name):
     </metadata>
 
     <defs>
-        <pattern id=\"border-pattern\" x=\"0\" y=\"0\" width=\"12\" height=\"12\" patternUnits=\"userSpaceOnUse\">
-            <circle cx=\"2\" cy=\"2\" r=\"1\" fill=\"{accent_color}\" opacity=\"0.35\"/>
-            <circle cx=\"8\" cy=\"8\" r=\"1\" fill=\"{accent_color}\" opacity=\"0.35\"/>
-            <circle cx=\"8\" cy=\"2\" r=\"2\" fill=\"{accent_color}\" opacity=\"0.55\"/>
-            <circle cx=\"2\" cy=\"8\" r=\"2\" fill=\"{accent_color}\" opacity=\"0.55\"/>
+        <pattern id=\"border-pattern\" x=\"0\" y=\"0\" width=\"49\" height=\"49\" patternUnits=\"userSpaceOnUse\">
+            <circle cx=\"16\" cy=\"16\" r=\"4\" fill="{accent_color}\" opacity=\"1\"/>
+            <circle cx=\"40\" cy=\"40\" r=\"4\" fill="{accent_color}\" opacity=\"1\"/>
+            <circle cx=\"40\" cy=\"16\" r=\"8\" fill="{accent_color}\" opacity=\"1\"/>
+            <circle cx=\"16\" cy=\"40\" r=\"8\" fill="{accent_color}\" opacity=\"1\"/>
         </pattern>
     </defs>
     <rect x=\"0\" y=\"0\" width=\"{BLEED_WIDTH}\" height=\"{single_board_height}\" fill=\"{bg_color}\" />
@@ -223,9 +207,9 @@ def create_policy_board(board_type, bg_color, accent_color, board_name):
 
 def create_combined_policy_board():
     combined_inner = '<g transform="translate(1737, 540) rotate(180)">\n'
-    combined_inner += build_fraud_board("#200a0a", "#ba293b", "FRAUDULENT TRACK", y_offset=0, mirrored=False, pattern_id="border-pattern-fraud")
+    combined_inner += build_fraud_board("#231f20", "#ba293b", "FRAUDULENT TRACK", y_offset=0, mirrored=False, pattern_id="border-pattern-fraud")
     combined_inner += '</g>\n'
-    combined_inner += build_auth_board("#0d1721", "#0b6fb7", "AUTHENTIC TRACK", y_offset=540, mirrored=False, pattern_id="border-pattern-auth")
+    combined_inner += build_auth_board("#231f20", "#0b6fb7", "AUTHENTIC TRACK", y_offset=540, mirrored=False, pattern_id="border-pattern-auth")
 
     svg_template = f"""<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>
 <svg 
@@ -243,20 +227,20 @@ def create_combined_policy_board():
     </metadata>
 
     <defs>
-        <pattern id=\"border-pattern-fraud\" x=\"0\" y=\"0\" width=\"12\" height=\"12\" patternUnits=\"userSpaceOnUse\">
-            <circle cx=\"2\" cy=\"2\" r=\"1\" fill=\"#ba293b\" opacity=\"0.35\"/>
-            <circle cx=\"8\" cy=\"8\" r=\"1\" fill=\"#ba293b\" opacity=\"0.35\"/>
-            <circle cx=\"8\" cy=\"2\" r=\"2\" fill=\"#ba293b\" opacity=\"0.55\"/>
-            <circle cx=\"2\" cy=\"8\" r=\"2\" fill=\"#ba293b\" opacity=\"0.55\"/>
+        <pattern id=\"border-pattern-fraud\" x=\"0\" y=\"0\" width=\"49\" height=\"49\" patternUnits=\"userSpaceOnUse\">
+            <circle cx=\"16\" cy=\"16\" r=\"4\" fill=\"#ba293b\" opacity=\"1\"/>
+            <circle cx=\"40\" cy=\"40\" r=\"4\" fill=\"#ba293b\" opacity=\"1\"/>
+            <circle cx=\"40\" cy=\"16\" r=\"8\" fill=\"#ba293b\" opacity=\"1\"/>
+            <circle cx=\"16\" cy=\"40\" r=\"8\" fill=\"#ba293b\" opacity=\"1\"/>
         </pattern>
-        <pattern id=\"border-pattern-auth\" x=\"0\" y=\"0\" width=\"12\" height=\"12\" patternUnits=\"userSpaceOnUse\">
-            <circle cx=\"2\" cy=\"2\" r=\"1\" fill=\"#0b6fb7\" opacity=\"0.35\"/>
-            <circle cx=\"8\" cy=\"8\" r=\"1\" fill=\"#0b6fb7\" opacity=\"0.35\"/>
-            <circle cx=\"8\" cy=\"2\" r=\"2\" fill=\"#0b6fb7\" opacity=\"0.55\"/>
-            <circle cx=\"2\" cy=\"8\" r=\"2\" fill=\"#0b6fb7\" opacity=\"0.55\"/>
+        <pattern id=\"border-pattern-auth\" x=\"0\" y=\"0\" width=\"48\" height=\"49\" patternUnits=\"userSpaceOnUse\">
+            <circle cx=\"12\" cy=\"16\" r=\"4\" fill=\"#0b6fb7\" opacity=\"1\"/>
+            <circle cx=\"36\" cy=\"40\" r=\"4\" fill=\"#0b6fb7\" opacity=\"1\"/>
+            <circle cx=\"36\" cy=\"16\" r=\"8\" fill=\"#0b6fb7\" opacity=\"1\"/>
+            <circle cx=\"12\" cy=\"40\" r=\"8\" fill=\"#0b6fb7\" opacity=\"1\"/>
         </pattern>
     </defs>
-    <rect x=\"0\" y=\"0\" width=\"{BLEED_WIDTH}\" height=\"{BLEED_HEIGHT}\" fill=\"#0a0a0a\" />
+    <rect x=\"0\" y=\"0\" width=\"{BLEED_WIDTH}\" height=\"{BLEED_HEIGHT}\" fill=\"#231f20\" />
 {combined_inner}
 </svg>
 """
@@ -265,8 +249,8 @@ def create_combined_policy_board():
         f.write(svg_template)
     print(f"Generated: {filename}")
 
-
+# OG background colour auth #0d1721 fraud #210e0f
 # Run the generator
-create_policy_board("AUTHENTIC", "#0d1721", "#0b6fb7", "AUTHENTIC TRACK")
-create_policy_board("FRAUDULENT", "#210e0f", "#ba293b", "FRAUDULENT TRACK")
+create_policy_board("AUTHENTIC", "#231f20", "#0b6fb7", "AUTHENTIC TRACK")
+create_policy_board("FRAUDULENT", "#231f20", "#ba293b", "FRAUDULENT TRACK")
 create_combined_policy_board()

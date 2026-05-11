@@ -22,3 +22,10 @@ supplier_instructions			1
 & "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=CMYK -dProcessColorModel=/DeviceCMYK -dCompatibilityLevel=1.4 -sOutputFile=board_56combined_CMYK.pdf board_56combined.pdf
 
 & "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=CMYK -dProcessColorModel=/DeviceCMYK -dCompatibilityLevel=1.4 -sOutputFile=board_78combined_CMYK.pdf board_78combined.pdf
+
+& "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -o - -sDEVICE=inkcov board_FOGRA39_FINAL.pdf 
+
+With ICC profile:
+& "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -dNOSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=CMYK -dProcessColorModel=/DeviceCMYK -sOutputICCProfile=ISOcoated_v2_300_eci.icc -o board_56combined2cmyk.pdf board_56combined2.pdf
+
+& "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -dNOSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=CMYK -dProcessColorModel=/DeviceCMYK -sOutputICCProfile=ISOcoated_v2_300_eci.icc -o board_78combined2cmyk.pdf board_78combined2.pdf

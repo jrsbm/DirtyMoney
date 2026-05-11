@@ -14,67 +14,65 @@
     </metadata>
 
     <defs>
-        <pattern id="border-pattern" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1" fill="#ba293b" opacity="0.35"/>
-            <circle cx="8" cy="8" r="1" fill="#ba293b" opacity="0.35"/>
-            <circle cx="8" cy="2" r="2" fill="#ba293b" opacity="0.55"/>
-            <circle cx="2" cy="8" r="2" fill="#ba293b" opacity="0.55"/>
+        <pattern id="border-pattern" x="0" y="0" width="49" height="49" patternUnits="userSpaceOnUse">
+            <circle cx="16" cy="16" r="4" fill="#ba293b" opacity="1"/>
+            <circle cx="40" cy="40" r="4" fill="#ba293b" opacity="1"/>
+            <circle cx="40" cy="16" r="8" fill="#ba293b" opacity="1"/>
+            <circle cx="16" cy="40" r="8" fill="#ba293b" opacity="1"/>
         </pattern>
     </defs>
-    <rect x="0" y="0" width="1737" height="558" fill="#210e0f" />
+    <rect x="0" y="0" width="1737" height="558" fill="#231f20" />
     <g transform="translate(18, -18)">
-        <rect x="0" y="0" width="1701" height="522" rx="17" fill="#210e0f" />
-
-        <rect x="10" y="10" width="1680" height="502" rx="13" fill="none" stroke="#ba293b" stroke-width="2" opacity="1" />
-        <rect x="20" y="20" width="1660" height="482" rx="3" fill="none" stroke="url(#border-pattern)" stroke-width="17" opacity="1" />
+        <rect x="10" y="10" width="1680" height="502" rx="13" fill="none" stroke="#ba293b" stroke-width="5" opacity="1" />
+        <rect x="20" y="20" width="1660" height="482" rx="3" fill="none" stroke="url(#border-pattern)" stroke-width="24" opacity="1" />
 
         <text x="54" y="75" font-family="Georgia, serif" font-size="40" font-weight="bold" fill="#ba293b" letter-spacing="2">FRAUDULENT TRACK</text>
-        <line x1="54" y1="86" x2="576" y2="86" stroke="#ba293b" stroke-width="2" opacity="0.4" />
+        <line x1="54" y1="86" x2="576" y2="86" stroke="#ba293b" stroke-width="5" opacity="1" />
 
         <rect x="893" y="66" width="713" height="13" rx="3" fill="none" stroke="#ba293b" stroke-width="17" opacity="1" />
-        <text x="978" y="76" font-family="Courier New, monospace" font-size="16" font-weight="bold" fill="#210e0f" opacity="1">FRAUDSTERS WIN IF TRICK-MEISTER IS ELECTED AS SUPPLIER</text>
+        <text x="893" y="78" font-family="Courier New, monospace" font-size="22" font-weight="bold" fill="#231f20" opacity="1">FRAUDSTERS WIN IF TRICK-MEISTER IS ELECTED AS SUPPLIER</text>
 
     <g transform="translate(75, 116)">
-        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="2" opacity="1"/>
-        <text x="116" y="166" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="0.35">SLOT 1</text>
+        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="5" opacity="1"/>
+        <text x="116" y="166" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">SLOT 1</text>
     </g>
     <g transform="translate(340, 116)">
-        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="2" opacity="1"/>
-        <text x="116" y="166" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="0.35">SLOT 2</text>
+        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="5" opacity="1"/>
+        <text x="116" y="166" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">SLOT 2</text>
     </g>
     <g transform="translate(605, 116)">
-        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="2" opacity="1"/>
-        <text x="116" y="50" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">Authenticity test</text>
-        <text x="116" y="166" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="0.35">SLOT 3</text>
-        <text x="116" y="265" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">The trader examines</text>
-        <text x="116" y="290" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">the top 3 cards</text>
+        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="5" opacity="1"/>
+        <text x="116" y="50" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">Authenticity</text>
+        <text x="116" y="75" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">test</text>
+        <text x="116" y="215" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">The trader</text>
+        <text x="116" y="240" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">examines</text>
+        <text x="116" y="265" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">the top</text>
+        <text x="116" y="290" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">3 cards</text>
     </g>
     <g transform="translate(870, 116)">
-        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="2" opacity="1"/>
-        <text x="116" y="50" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">Reorganisation</text>
-        <text x="116" y="166" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="0.35">SLOT 4</text>
-        <text x="116" y="265" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">The trader must</text>
-        <text x="116" y="290" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">fire a player</text>
+        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="5" opacity="1"/>
+        <text x="116" y="50" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">Reorgani</text>
+        <text x="116" y="75" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">-sation</text>
+        <text x="116" y="215" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">The trader</text>
+        <text x="116" y="240" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">must fire</text>
+        <text x="116" y="265" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">a player</text>
     </g>
     <g transform="translate(1135, 116)">
-        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="2" opacity="1"/>
-        <text x="116" y="50" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">Reorganisation</text>
-        <text x="116" y="166" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="0.35">SLOT 5</text>
-        <text x="116" y="265" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">The trader must</text>
-        <text x="116" y="290" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">fire a player</text>
+        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="5" opacity="1"/>
+        <text x="116" y="50" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">Reorgani</text>
+        <text x="116" y="75" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">-sation</text>
+        <text x="116" y="215" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">The trader</text>
+        <text x="116" y="240" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">must fire</text>
+        <text x="116" y="265" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">a player</text>
     </g>
     <g transform="translate(1401, 116)">
-        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="2" opacity="1"/>
-        <text x="116" y="50" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">Fraudsters win!</text>
-        <text x="116" y="166" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="0.35">SLOT 6</text>
-        <text x="116" y="265" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">The supply chain has</text>
-        <text x="116" y="290" font-family="Courier New, monospace" font-size="15" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">been fully infiltrated</text>
+        <rect x="0" y="0" width="232" height="315" rx="13" fill="none" stroke="#ba293b" stroke-width="5" opacity="1"/>
+        <text x="116" y="151" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">Fraudster</text>
+        <text x="116" y="181" font-family="Courier New, monospace" font-size="30" font-weight="bold" fill="#ba293b" text-anchor="middle" opacity="1">team wins!</text>
     </g>
 
-        <rect x="375" y="464" width="957" height="13" rx="3" fill="none" stroke="#ba293b" stroke-width="17" opacity="1" />
-        <text x="385" y="474" font-family="Courier New, monospace" font-size="16" font-weight="bold" fill="#210e0f" opacity="1">5 OR 6 PLAYERS: PLAY WITH 1 FRAUDSTER AND TRICK-MEISTER, TRICK-MEISTER KNOWS WHO THE FRAUDSTER IS</text>
-
-        <text x="1625" y="489" font-family="Courier New, monospace" font-size="10" fill="#ba293b" text-anchor="end" opacity="1">DIRTY MONEY</text>
+        <rect x="225" y="462" width="1297" height="13" rx="3" fill="none" stroke="#ba293b" stroke-width="17" opacity="1" />
+        <text x="235" y="474" font-family="Courier New, monospace" font-size="22" font-weight="bold" fill="#231f20" opacity="1">5 OR 6 PLAYERS: PLAY WITH 1 FRAUDSTER AND TRICK-MEISTER, TRICK-MEISTER KNOWS WHO THE FRAUDSTER IS</text>
     </g>
 
 </svg>
