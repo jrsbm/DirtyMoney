@@ -15,66 +15,58 @@
     </metadata>
 
     <!-- Card base with subtle gradient effect -->
-    <rect x="0" y="0" width="225" height="315" rx="8" fill="#0a1520" />
-    <rect x="1" y="1" width="223" height="313" rx="7" fill="none" stroke="#0070c4" stroke-width="0.8" opacity="0.3"/>
+    
+    <rect id="card-base" x="0" y="0" width="225" height="315" rx="8" fill="#0a1520" stroke="#0070c4" stroke-width="5"/>
     
     <!-- Top decorative line -->
-    <line x1="20" y1="15" x2="205" y2="15" stroke="#0070c4" stroke-width="1" opacity="0.6" />
+    <line x1="20" y1="15" x2="205" y2="15" stroke="#0070c4" stroke-width="2" opacity="1" />
     
     <!-- Header -->
-    <text x="112.5" y="32" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#0070c4" text-anchor="middle" letter-spacing="1">DIRTY MONEY</text>
-    <text x="112.5" y="42" font-family="Courier New, monospace" font-size="7" fill="#0070c4" text-anchor="middle" opacity="0.6">CONFIDENTIAL</text>
+    <text x="112.5" y="32" font-family="Georgia, serif" font-size="12" font-weight="bold" fill="#0070c4" text-anchor="middle" letter-spacing="1">DIRTY MONEY</text>
+    <text x="112.5" y="42" font-family="Courier New, monospace" font-size="10" fill="#0070c4" text-anchor="middle" opacity="1">CONFIDENTIAL</text>
     
     <!-- Divider -->
-    <line x1="30" y1="50" x2="195" y2="50" stroke="#0070c4" stroke-width="0.5" opacity="0.4" />
+    <line x1="30" y1="50" x2="195" y2="50" stroke="#0070c4" stroke-width="2" opacity="1" />
     
     <!-- Logo/Illustration Area - Shield with symbol -->
     <g transform="translate(112.5, 100)">
         <!-- Shield shape -->
         <path d="M -45 -40 L 45 -40 L 45 10 C 45 35 0 55 0 55 C 0 55 -45 35 -45 10 Z" 
-              fill="none" stroke="#0070c4" stroke-width="1.5" opacity="0.8"/>
+              fill="none" stroke="#0070c4" stroke-width="3" opacity="1"/>
         
         <!-- Inner shield -->
         <path d="M -35 -30 L 35 -30 L 35 8 C 35 28 0 45 0 45 C 0 45 -35 28 -35 8 Z" 
-              fill="none" stroke="#0070c4" stroke-width="0.5" opacity="0.4"/>
+              fill="none" stroke="#0070c4" stroke-width="2" opacity="1"/>
         
         <!-- Symbol based on team type -->
         <!-- Authentic: Checkmark/Verified symbol -->
-        <path d="M -20 5 L -5 20 L 25 -15" fill="none" stroke="#0070c4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M -20 5 L -5 20 L 25 -15" fill="none" stroke="#0070c4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
     </g>
     
     <!-- Team name -->
     <text x="112.5" y="180" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#0070c4" text-anchor="middle" letter-spacing="1">AUTHENTIC</text>
     <text x="112.5" y="200" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#0070c4" text-anchor="middle" letter-spacing="1">TEAM</text>
     
-    <!-- Decorative line under team name -->
-    <!-- line x1="70" y1="195" x2="155" y2="195" stroke="#0070c4" stroke-width="1" opacity="0.5" /-->
-    
     <!-- Divider -->
-    <line x1="30" y1="210" x2="195" y2="210" stroke="#0070c4" stroke-width="0.5" opacity="0.3" />
+    <line x1="30" y1="210" x2="195" y2="210" stroke="#0070c4" stroke-width="2" opacity="1" />
     
     <!-- Instructions section -->
-    <text x="112.5" y="222" font-family="Courier New, monospace" font-size="6" fill="#0070c4" text-anchor="middle" font-weight="bold">OBJECTIVE</text>
-    <text x="112.5" y="232" font-family="Arial, sans-serif" font-size="6" fill="#0070c4" text-anchor="middle" opacity="0.7">
+    <text x="112.5" y="224" font-family="Courier New, monospace" font-size="10" fill="#0070c4" text-anchor="middle" font-weight="bold">OBJECTIVE</text>
+    <text x="112.5" y="236" font-family="Arial, sans-serif" font-size="10" fill="#0070c4" text-anchor="middle" opacity="1">
         Expose fraudulent food suppliers
          
     </text>
-    <text x="112.5" y="242" font-family="Arial, sans-serif" font-size="6" fill="#0070c4" text-anchor="middle" opacity="0.7">
+    <text x="112.5" y="248" font-family="Arial, sans-serif" font-size="10" fill="#0070c4" text-anchor="middle" opacity="1">
          before they contaminate the food supply chain.
-         
-    </text>
-    
-    <!-- Second objective line -->
-    <text x="112.5" y="242" font-family="Arial, sans-serif" font-size="6" fill="#0070c4" text-anchor="middle" opacity="0.7">
          
     </text>
     
     <!-- Bottom decorative element -->
     <g transform="translate(112.5, 270)">
-        <circle cx="0" cy="0" r="8" fill="none" stroke="#0070c4" stroke-width="0.8" opacity="0.5"/>
-        <circle cx="0" cy="0" r="4" fill="none" stroke="#0070c4" stroke-width="0.5" opacity="0.4"/>
+        <circle cx="0" cy="0" r="8" fill="none" stroke="#0070c4" stroke-width="1.5" opacity="1"/>
+        <circle cx="0" cy="0" r="4" fill="none" stroke="#0070c4" stroke-width="1" opacity="1"/>
     </g>
     
     <!-- Footer -->
-    <text x="112.5" y="295" font-family="Courier New, monospace" font-size="5" fill="#0070c4" text-anchor="middle" opacity="0.4">KEEP YOUR IDENTITY SECRET</text>
+    <text x="112.5" y="295" font-family="Courier New, monospace" font-size="10" fill="#0070c4" text-anchor="middle" opacity="1">KEEP YOUR IDENTITY SECRET</text>
 </svg>

@@ -15,49 +15,49 @@
     </metadata>
 
     <!-- Card base -->
-    <rect x="0" y="0" width="225" height="315" rx="8" fill="#0a1520" />
-    <rect x="1" y="1" width="223" height="313" rx="7" fill="none" stroke="#0070c4" stroke-width="0.8" opacity="0.3"/>
+    <rect id="card-base" x="0" y="0" width="225" height="315" rx="8" fill="#0a1520" stroke="#0070c4" stroke-width="5"/>
     
     <!-- Top decorative line -->
-    <line x1="20" y1="15" x2="205" y2="15" stroke="#0070c4" stroke-width="1" opacity="0.6" />
+    <line x1="20" y1="15" x2="205" y2="15" stroke="#0070c4" stroke-width="2" opacity="1" />
     
     <!-- Header -->
-    <text x="112.5" y="32" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#0070c4" text-anchor="middle" letter-spacing="1">DIRTY MONEY</text>
-    <text x="112.5" y="42" font-family="Courier New, monospace" font-size="7" fill="#0070c4" text-anchor="middle" opacity="0.6">CONFIDENTIAL</text>
+    <text x="112.5" y="32" font-family="Georgia, serif" font-size="12" font-weight="bold" fill="#0070c4" text-anchor="middle" letter-spacing="1">DIRTY MONEY</text>
+    <text x="112.5" y="42" font-family="Courier New, monospace" font-size="10" fill="#0070c4" text-anchor="middle" opacity="1">CONFIDENTIAL</text>
     
     <!-- Divider -->
-    <line x1="30" y1="50" x2="195" y2="50" stroke="#0070c4" stroke-width="0.5" opacity="0.4" />
+    <line x1="30" y1="50" x2="195" y2="50" stroke="#0070c4" stroke-width="2" opacity="1" />
     
     <!-- Person Silhouette - Head and shoulders -->
     <g transform="translate(112.5, 130)">
         <!-- Head circle -->
-        <circle cx="0" cy="-25" r="22" fill="none" stroke="#0070c4" stroke-width="1.2" opacity="0.7"/>
+        <circle cx="0" cy="-25" r="22" fill="none" stroke="#0070c4" stroke-width="2" opacity="1"/>
         
         <!-- Shoulders/Body -->
         <path d="M -35 25 Q -35 5 -20 0 Q 0 -5 20 0 Q 35 5 35 25" 
-              fill="none" stroke="#0070c4" stroke-width="1" opacity="0.6"/>
+              fill="none" stroke="#0070c4" stroke-width="2" opacity="1"/>
         
         <!-- Collar detail -->
-        <path d="M -15 5 Q 0 12 15 5" fill="none" stroke="#0070c4" stroke-width="0.8" opacity="0.5"/>
+        <path d="M -15 5 Q 0 12 15 5" fill="none" stroke="#0070c4" stroke-width="2" opacity="1"/>
     </g>
     
     <!-- Role Title -->
     <text x="112.5" y="175" font-family="Georgia, serif" font-size="14" font-weight="bold" fill="#0070c4" text-anchor="middle" letter-spacing="0.5">LOGISTICS MANAGER</text>
     
     <!-- Decorative line -->
-    <line x1="60" y1="182" x2="165" y2="182" stroke="#0070c4" stroke-width="0.8" opacity="0.4" />
+    <line x1="60" y1="182" x2="165" y2="182" stroke="#0070c4" stroke-width="2" opacity="1" />
     
     <!-- Role description -->
-    <text x="112.5" y="195" font-family="Arial, sans-serif" font-size="7" fill="#0070c4" text-anchor="middle" opacity="0.8">Coordinating secure transportation and storage</text>
-    
+    <text x="112.5" y="195" font-family="Arial, sans-serif" font-size="10" fill="#0070c4" text-anchor="middle" opacity="1">Coordinating secure</text>
+    <text x="112.5" y="205" font-family="Arial, sans-serif" font-size="10" fill="#0070c4" text-anchor="middle" opacity="1">transportation and storage</text>
+
     <!-- Team indicator -->
     <g transform="translate(112.5, 250)">
-        <rect x="-60" y="-15" width="120" height="30" rx="3" fill="none" stroke="#0070c4" stroke-width="0.8" opacity="0.5"/>
-        <text x="0" y="4" font-family="Courier New, monospace" font-size="20" fill="#0070c4" text-anchor="middle" font-weight="bold">
+        <rect x="-85" y="-25" width="170" height="40" rx="3" fill="none" stroke="#0070c4" stroke-width="1" opacity="1"/>
+        <text x="0" y="4" font-family="Courier New, monospace" font-size="28" fill="#0070c4" text-anchor="middle" font-weight="bold">
             AUTHENTIC
         </text>
     </g>
     
     <!-- Footer -->
-    <text x="112.5" y="295" font-family="Courier New, monospace" font-size="5" fill="#0070c4" text-anchor="middle" opacity="0.4">KEEP YOUR IDENTITY SECRET</text>
+    <text x="112.5" y="295" font-family="Courier New, monospace" font-size="10" fill="#0070c4" text-anchor="middle" opacity="1">KEEP YOUR IDENTITY SECRET</text>
 </svg>

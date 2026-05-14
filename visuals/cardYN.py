@@ -20,26 +20,20 @@ def create_voting_card(card_type, bg_color, accent_color, vote_text):
     </metadata>
 
     <!-- Card base with subtle inner border -->
-    <rect x="0" y="0" width="315" height="225" rx="6" fill="{bg_color}" />
-    <rect x="1.5" y="1.5" width="312" height="222" rx="5" fill="none" stroke="{accent_color}" stroke-width="1" opacity="0.4"/>
-    
-    <!-- Left accent bar -->
-    <rect x="0" y="0" width="8" height="225" rx="0" fill="{accent_color}" opacity="0.8"/>
+    <rect id="card-base" x="0" y="0" width="315" height="225" rx="8" fill="{bg_color}" stroke="{accent_color}" stroke-width="5"/>
     
     <!-- Header section -->
-    <text x="24" y="22" font-family="Courier New, monospace" font-size="11" font-weight="bold" fill="{accent_color}" letter-spacing="1">VOTE CARD</text>
-    <text x="290" y="22" font-family="Courier New, monospace" font-size="8" fill="{accent_color}" opacity="0.6" text-anchor="end">CASE #{card_type}</text>
+    <text x="24" y="22" font-family="Courier New, monospace" font-size="12" font-weight="bold" fill="{accent_color}" letter-spacing="1">VOTE CARD</text>
     
     <!-- Divider -->
-    <line x1="24" y1="30" x2="290" y2="30" stroke="{accent_color}" stroke-width="0.5" opacity="0.4" />
+    <line x1="24" y1="30" x2="290" y2="30" stroke="{accent_color}" stroke-width="2" opacity="1" />
     
     <!-- Main verdict area -->
     <text x="157" y="150" font-family="Georgia, serif" font-size="96" font-weight="bold" fill="{accent_color}" text-anchor="middle" letter-spacing="3">{vote_text}</text>
     
     <!-- Footer -->
-    <line x1="24" y1="185" x2="290" y2="185" stroke="{accent_color}" stroke-width="0.5" opacity="0.3" />
-    <text x="157" y="200" font-family="Courier New, monospace" font-size="6" fill="{accent_color}" opacity="0.5" text-anchor="middle">DIRTY MONEY - A FOOD FRAUD GAME</text>
-    <text x="157" y="212" font-family="Courier New, monospace" font-size="5" fill="{accent_color}" opacity="0.4" text-anchor="middle">CONFIDENTIAL - FOR INVESTIGATIVE USE ONLY</text>
+    <line x1="24" y1="185" x2="290" y2="185" stroke="{accent_color}" stroke-width="2" opacity="1" />
+    <text x="157" y="208" font-family="Courier New, monospace" font-size="12" fill="{accent_color}" opacity="1" text-anchor="middle">DIRTY MONEY - A FOOD FRAUD GAME</text>
 </svg>
 """
     filename = f"vote_{vote_text.lower()}_card.svg"

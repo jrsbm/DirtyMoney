@@ -20,19 +20,19 @@ def create_card(card_type, bg_color, accent_color):
     </metadata>
 
     <!-- Card base -->
-    <rect id="card-base" x="0" y="0" width="225" height="315" rx="8" fill="{bg_color}" stroke="{accent_color}" stroke-width="1.5"/>
-    <text x="112.5" y="136" font-family="Courier New, monospace" font-size="30" fill="{accent_color}" text-anchor="middle" opacity="0.5">DIRTY</text>
-    <text x="112.5" y="197" font-family="Courier New, monospace" font-size="30" fill="{accent_color}" text-anchor="middle" opacity="0.5">MONEY</text>
+    <rect id="card-base" x="0" y="0" width="225" height="315" rx="8" fill="{bg_color}" stroke="{accent_color}" stroke-width="5"/>
+    <text x="112.5" y="116" font-family="Courier New, monospace" font-size="50" fill="{accent_color}" text-anchor="middle" opacity="0.5">DIRTY</text>
+    <text x="112.5" y="229" font-family="Courier New, monospace" font-size="50" fill="{accent_color}" text-anchor="middle" opacity="0.5">MONEY</text>
 
     <!-- Allign -->
     <rect x="82.5" y="135.5" width="60" height="44" rx="2" stroke="{accent_color}" fill="none" opacity="0"/>
     
     <!-- Money icon -->
     <g transform="translate(92.5, 145.5)" opacity="0.5">
-    <rect width="40" height="24" rx="2" stroke="{accent_color}" stroke-width="1.2" fill="none"/>
-    <circle cx="8" cy="12" r="1.5" fill="{accent_color}"/>
-    <circle cx="20" cy="12" r="4" stroke="{accent_color}" stroke-width="1.22" fill="none"/>
-    <circle cx="32" cy="12" r="1.5" fill="{accent_color}"/>
+    <rect width="40" height="24" rx="2" stroke="{accent_color}" stroke-width="3" fill="none"/>
+    <circle cx="8" cy="12" r="3" fill="{accent_color}"/>
+    <circle cx="20" cy="12" r="4" stroke="{accent_color}" stroke-width="3" fill="none"/>
+    <circle cx="32" cy="12" r="3" fill="{accent_color}"/>
     </g>
 </svg>
 """

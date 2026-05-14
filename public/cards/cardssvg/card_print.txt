@@ -1,0 +1,17 @@
+vote_yes_card				8
+vote_no_card				8
+authentic_card				6
+fraudulent_card				11
+member_authentic_card			5
+member_fraudulent_card			3
+authentic_contract_admin_card		1
+authentic_logistics_manager_card	1
+authentic_procurement_spec._card	1
+authentic_purchasing_agent_card		1
+authentic_qa_manager_card		1
+fraudster_dockworker_card		1
+fraudster_procurement_spec._card	1
+trickmeister_trick-meister_card		1
+trader_card				1
+supplier_card				1
+

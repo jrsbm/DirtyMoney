@@ -1,5 +1,5 @@
-vote_yes_card				10
-vote_no_card				10
+vote_yes_card				8
+vote_no_card				8
 authentic_card				6
 fraudulent_card				11
 member_authentic_card			5
@@ -26,6 +26,6 @@ supplier_instructions			1
 & "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -o - -sDEVICE=inkcov board_FOGRA39_FINAL.pdf 
 
 With ICC profile:
-& "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -dNOSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=CMYK -dProcessColorModel=/DeviceCMYK -sOutputICCProfile=ISOcoated_v2_300_eci.icc -o board_56combined2cmyk.pdf board_56combined2.pdf
+& "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -dNOSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=CMYK -dProcessColorModel=/DeviceCMYK -sOutputICCProfile=ISOcoated_v2_300_eci.icc -o board_56combined3cmyk.pdf board_56combined3.pdf
 
-& "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -dNOSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=CMYK -dProcessColorModel=/DeviceCMYK -sOutputICCProfile=ISOcoated_v2_300_eci.icc -o board_78combined2cmyk.pdf board_78combined2.pdf
+& "C:\Program Files\gs\gs10.07.0\bin\gswin64c.exe" --% -dNOSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sColorConversionStrategy=CMYK -dProcessColorModel=/DeviceCMYK -sOutputICCProfile=ISOcoated_v2_300_eci.icc -o board_78combined3cmyk.pdf board_78combined3.pdf
