@@ -1,0 +1,11 @@
+Folder visuals/boards contains the two boards for the game.
+- One for playing with 5 or 6 players
+- One for playing with 7 or 8 players
+
+Folder visuals/cards contains the cards for the game.
+card_print.txt lists the number of cards you must print for a complete set.
+
+Other materials
+- dirty_money_rules.docx contains a printable instruction to the game.
+- 8 envelopes are necessary to secretly assign players their role.
+- 8 coins or similar are necessary for the game's economy element.
