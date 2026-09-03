@@ -1,14 +1,20 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { gameState } from '../state';
+import { lobbies } from '../server';
 import { adjustFunds, rotateTrader, triggerPowerLogic, checkWinConditions, processBankruptcy } from '../gameLogic';
 
 const router = express.Router();
 
 // Discard route
 router.post('/discard', (req: Request, res: Response) => {
-    const { playerId, cardIndex } = req.body;
+    const { lobbyId, playerId, cardIndex } = req.body;
     
+    if (!lobbyId || !lobbies[lobbyId]) {
+        return res.status(404).json({ error: "Lobby not found or missing lobbyId" });
+    }
+
+    const gameState = lobbies[lobbyId];
+
     // 1. Is it the Trader's turn to discard? (3 cards in hand)
     const isTrader = gameState.players[gameState.traderIndex].id === playerId;
     const isSupplier = gameState.nominatedSupplierId === playerId;
@@ -29,23 +35,23 @@ router.post('/discard', (req: Request, res: Response) => {
         if (enacted === 'Authentic') {
             gameState.scores.authentic++;
             gameState.lastResult = `📜 A batch was selected: AUTHENTIC. \n€2M added to company funds`;
-            adjustFunds(2);
+            adjustFunds(gameState, 2);
         } else {
             gameState.scores.fraudulent++;
             gameState.lastResult = `📜 A batch was selected: FRAUDULENT. \n€1M deducted from company funds`;
-            triggerPowerLogic();
+            triggerPowerLogic(gameState);
             if (gameState.activePower) {
                 gameState.lastResult += `\n ⚠️ Power Triggered: ${gameState.activePower.replace('_', ' ')}.`;
             }
-            adjustFunds(-1);
+            adjustFunds(gameState, -1);
         }
 
         // Check for Win Conditions
-        checkWinConditions();        
+        checkWinConditions(gameState);        
         if (gameState.status !== 'END' && gameState.status !== 'POWER') {
             // Reset for next round
             gameState.status = 'ELECTION';
-            rotateTrader();
+            rotateTrader(gameState);
         }
         
         return res.json({ message: `Selected ${enacted}` });
@@ -56,7 +62,13 @@ router.post('/discard', (req: Request, res: Response) => {
 
 // Power route
 router.post('/use-power', (req: Request, res: Response) => {
-    const { playerId, targetId } = req.body;
+    const { lobbyId, playerId, targetId } = req.body;
+
+    if (!lobbyId || !lobbies[lobbyId]) {
+        return res.status(404).json({ error: "Lobby not found or missing lobbyId" });
+    }
+
+    const gameState = lobbies[lobbyId];
     const isTrader = gameState.players[gameState.traderIndex].id === playerId;
 
     if (!isTrader || gameState.status !== 'POWER') {
@@ -125,7 +137,13 @@ router.post('/use-power', (req: Request, res: Response) => {
 });
 
 router.post('/end-power', (req: Request, res: Response) => {
-    const { playerId } = req.body;
+    const { lobbyId, playerId } = req.body;
+
+    if (!lobbyId || !lobbies[lobbyId]) {
+        return res.status(404).json({ error: "Lobby not found or missing lobbyId" });
+    }
+
+    const gameState = lobbies[lobbyId];
     const isTrader = gameState.players[gameState.traderIndex].id === playerId;
 
     if (!isTrader) return res.status(403).json({ error: "Forbidden" });
@@ -134,7 +152,7 @@ router.post('/end-power', (req: Request, res: Response) => {
     gameState.activePower = null;
     // Fraudulent-bankruptcy-fraudulent power chain
     if (gameState.funds <= 0) {
-        processBankruptcy();
+        processBankruptcy(gameState);
         if (gameState.status === 'POWER') {
             return res.json({ message: "Power resolved, but Bankruptcy triggered a new Power!" });
         }
@@ -147,7 +165,6 @@ router.post('/end-power', (req: Request, res: Response) => {
         gameState.tempNextTrader = null; 
     } else {
         // Normal rotation
-        // If we were in a special turn, we return to the original rotation
         if (gameState.originalTraderIndex !== null) {
             gameState.traderIndex = gameState.originalTraderIndex;
             gameState.originalTraderIndex = null;

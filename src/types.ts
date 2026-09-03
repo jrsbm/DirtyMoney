@@ -10,6 +10,8 @@ export interface Player {
 }
 
 export interface GameState {
+    id?: string;
+    name?: string;
     players: Player[];
     status: 'LOBBY' | 'ELECTION' | 'VOTING' | 'LEGISLATIVE' | 'POWER' | 'END';
     policyDeck: Policy[];
@@ -27,4 +29,10 @@ export interface GameState {
     originalTraderIndex: number | null;
     tempNextTrader: number | null;
     funds: number;
+}
+
+export interface LobbySummary {
+    id: string;
+    playerCount: number;
+    status: GameState['status'];
 }

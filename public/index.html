@@ -25,9 +25,14 @@
 
     <!-- Join Game Setup -->
     <div id="setup-ui">
-        <div class="input-group">
-            <input type="text" id="playerName" placeholder="Your Code Name...">
-            <button class="btn-primary" onclick="joinGame()">enter</button>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <select id="lobbySelect" style="padding: 10px; font-family: inherit; font-size: 1rem; width: 100%;">
+                <option value="" disabled selected>Loading available lobbies...</option>
+            </select>
+            <div class="input-group">
+                <input type="text" id="playerName" placeholder="Your Code Name...">
+                <button class="btn-primary" onclick="joinGame()">enter</button>
+            </div>
         </div>
     </div>
 

@@ -6,8 +6,8 @@ import { fileURLToPath } from 'url';
 import { lobbyRoutes } from './routes/lobby';
 import { electionRoutes } from './routes/election';
 import { legislativeRoutes } from './routes/legislative';
-import { Player } from './types';
-import { gameState } from './state';
+import { Player, GameState } from './types';
+import { createInitialState } from './state';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,13 +18,34 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 
+export const lobbies: Record<string, GameState> = {
+    'lobby1': createInitialState(),
+    'lobby2': createInitialState(),
+    'lobby3': createInitialState(),
+}
+
 app.use('/', lobbyRoutes);
 app.use('/', electionRoutes);
 app.use('/', legislativeRoutes);
 
+// All lobies and player counts
+app.get('/lobbies', (req: Request, res: Response) => {
+    const list = (Object.entries(lobbies) as [string, GameState][]).map(([id, state]) => ({
+        id,
+        playerCount: state.players.length,
+        status: state.status,
+    }));
+    res.json(list);
+});
+
 // Game state route
 app.get('/game-state', (req: Request, res: Response) => {
     const playerId = req.query.playerId as string;
+    const lobbyId = req.query.lobbyId as string;
+    const gameState = lobbies[lobbyId];
+    if(!gameState) {
+        return res.status(404).json({ error: 'Lobby not found' });
+    }
     const safeState = JSON.parse(JSON.stringify(gameState));
     safeState.players = safeState.players.map((p: Player) => {
         if (p.id === playerId) return p;
@@ -37,8 +58,6 @@ app.get('/game-state', (req: Request, res: Response) => {
 
         // Logic for Fraudulent Team visibility
         if (me.identity === 'Fraudulent') {
-            // Fraudulents always see other Fraudulents. 
-            // They only see the Trick-Meister in small games.
             if (p.identity === 'Fraudulent' || (isSmallGame && p.identity === 'Trick-Meister')) {
                 return p;
             }
@@ -60,7 +79,7 @@ app.get('/game-state', (req: Request, res: Response) => {
     if (gameState.status === 'LEGISLATIVE') {
         if ((gameState.hand.length === 3 && !isTrader) || (gameState.hand.length === 2 && !isSupplier)) {
             safeState.handCount = gameState.hand.length;
-            safeState.hand = []; // Hide cards from unauthorized eyes
+            safeState.hand = [];
         }
     } else {
         safeState.hand = []; // Hide hand when not in legislative phase

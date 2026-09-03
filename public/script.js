@@ -6,11 +6,46 @@ const BOARDS = {
     large: ["INVESTIGATE", "INVESTIGATE", "SPECIAL_ELECTION", "EXECUTION", "EXECUTION", "FRAUDULENT_WIN"]
 };
 
+async function loadLobbies() {
+    try {
+        const res = await fetch('/lobbies');
+        if (!res.ok) return;
+        const lobbies = await res.json();
+        const select = document.getElementById('lobbySelect');
+        if (!select) return;
+
+        const currentVal = select.value;
+        select.innerHTML = '';
+
+        if (lobbies.length === 0) {
+            select.innerHTML = '<option value="" disabled>No lobbies available</option>';
+            return;
+        }
+
+        lobbies.forEach(lobby => {
+            const opt  = document.createElement('option');
+            opt.value = lobby.id;
+            opt.textContent = `${lobby.id.toUpperCase()} (${lobby.playerCount} players - ${lobby.status})`;
+            select.appendChild(opt);
+        });
+
+        if (currentVal) {
+            select.value = currentVal;
+        }
+    } catch (err) {
+        console.error("Error loading lobbies:", err);
+    }
+}
+
 async function joinGame() {
     const nameInput = document.getElementById('playerName');
+    const lobbySelect = document.getElementById('lobbySelect');
     const name = nameInput.value.trim();
+    const lobbyId = lobbySelect ? lobbySelect.value : null;
     const joinBtn = document.querySelector('#setup-ui button');
+
     if (!name) return alert("Enter a name!");
+    if(!lobbyId) return alert("Select a lobby!");
 
     joinBtn.innerText = "joining...";
     joinBtn.disabled = true;
@@ -19,14 +54,16 @@ async function joinGame() {
         const response = await fetch('/join', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name })
+            body: JSON.stringify({ name: name, lobbyId: lobbyId })
         });
 
         if (response.ok) {
             const data = await response.json();
             myPlayerId = data.id;
+            selectedLobbyId = lobbyId;
             localStorage.setItem('dirtyMoneyPlayerId', myPlayerId);
-            document.getElementById('setup-ui').innerHTML = `<p style="color: var(--clr-authentic); font-family: var(--font-display); text-transform: uppercase;">✓ Joined as <b>${name}</b></p>`;
+            localStorage.setItem('dirtyMoneyLobbyId', selectedLobbyId);
+            document.getElementById('setup-ui').innerHTML = `<p style="color: var(--clr-authentic); font-family: var(--font-display); text-transform: uppercase;">✓ Joined <b>${lobbyId}</b> as <b>${name}</b></p>`;
             console.log("Joined successfully! ID assigned:", myPlayerId);
             refreshLobby();
         } else {
@@ -54,7 +91,7 @@ async function toggleReady() {
     const response = await fetch('/ready', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId: myPlayerId })
+        body: JSON.stringify({ playerId: myPlayerId, lobbyId: selectedLobbyId })
     });
 
     if (response.ok) {
@@ -64,7 +101,7 @@ async function toggleReady() {
 }
 
 document.addEventListener('keypress', function (e) {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
         return;
     }
     if (e.key.toLowerCase() === 'r') {
@@ -78,7 +115,8 @@ async function nominateSupplier(targetId) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             traderId: myPlayerId, 
-            supplierId: targetId 
+            supplierId: targetId,
+            lobbyId: selectedLobbyId 
         })
     });
 
@@ -97,7 +135,8 @@ async function sendVote(isYes) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             playerId: myPlayerId, 
-            vote: isYes 
+            vote: isYes,
+            lobbyId: selectedLobbyId
         })
     });
     if (response.ok) {
@@ -117,8 +156,17 @@ document.addEventListener('keydown', (e) => {
 
 async function refreshLobby() {        
     try {
-        const url = myPlayerId ? `/game-state?playerId=${myPlayerId}` : '/game-state';
+        if (!selectedLobbyId) {
+            await loadLobbies();
+            return;
+        }
+
+        const url = myPlayerId 
+            ? `/game-state?lobbyId=${selectedLobbyId}&playerId=${myPlayerId}` 
+            : `/game-state?lobbyId=${selectedLobbyId}`;
+        
         const response = await fetch(url);
+        if (!response.ok) return;
         const data = await response.json();
 
         const setupUI = document.getElementById('setup-ui');
@@ -298,7 +346,10 @@ async function refreshLobby() {
                     data.hand.forEach((policy, index) => {
                         const card = document.createElement('div');
                         card.className = `policy-card card-${policy.toLowerCase()}`;
-                        card.innerText = policy;
+                        const cardSvg = policy.toLowerCase() === 'authentic'
+                            ? 'visuals/cards/cardssvg/authentic_card/svg'
+                            : 'visuals/cards/cardssvg/fraudulent_card/svg';
+                        card.innerHTML = `<img src="${cardSvg}" alt="${policy}" style="width: 100%; height: 100%; border-radius: 6px; pointer-events: none;">`;
                         card.onclick = () => discardCard(index);
                         handContainer.appendChild(card);
                     });
@@ -342,11 +393,11 @@ async function refreshLobby() {
                 const square = document.createElement('div');
                 square.className = `track-square authentic ${i < authScore ? 'filled' : ''}`;
                 
-                const miniCard = document.createElement('div');
-                miniCard.className = 'mini-card card-authentic';
-                miniCard.innerText = `<img src="authentic_card.svg" style="width: 100%; height: 100%; border-radius: 2px;">`;
+                const miniCardAuth = document.createElement('div');
+                miniCardAuth.className = 'mini-card card-authentic';
+                miniCardAuth.innerHTML = `<img src="visuals/cards/cardssvg/authentic_card.svg" style="width: 100%; height: 100%; border-radius: 2px;">`;
                 
-                square.appendChild(miniCard);
+                square.appendChild(miniCardAuth);
                 
                 if (i === 4) {
                     const label = document.createElement('div');
@@ -366,11 +417,11 @@ async function refreshLobby() {
                 const square = document.createElement('div');
                 square.className = `track-square fraudulent ${i < frScore ? 'filled' : ''}`;
                 
-                const miniCard = document.createElement('div');
-                miniCard.className = 'mini-card card-fraudulent';
-                miniCard.innerText = `<img src="fraudulent_card.svg" style="width: 100%; height: 100%; border-radius: 2px;">`;
+                const miniCardFraud = document.createElement('div');
+                miniCardFraud.className = 'mini-card card-fraudulent';
+                miniCardFraud.innerHTML = `<img src="visuals/cards/cardssvg/fraudulent_card.svg" style="width: 100%; height: 100%; border-radius: 2px;">`;
                 
-                square.appendChild(miniCard);
+                square.appendChild(miniCardFraud);
                 
                 if (boardLabels[i]) {
                     const label = document.createElement('div');
@@ -458,7 +509,8 @@ async function discardCard(index) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             playerId: myPlayerId, 
-            cardIndex: index 
+            cardIndex: index,
+            lobbyId: selectedLobbyId
         })
     });
 
@@ -487,7 +539,9 @@ function getCardBackHTML() {
 
 function renderFlipReveal(enacted) {
     const handContainer = document.getElementById('policy-hand');
-    const svgUrl = enacted === 'authentic' ? 'authentic_card.svg' : 'fraudulent_card.svg';
+    const svgUrl = enacted === 'authentic' 
+        ? 'visuals/cards/cardssvg/authentic_card.svg'
+        : 'visuals/cards/cardssvg/fraudulent_card.svg';
     
     handContainer.innerHTML = `
         <div class="card-display">
@@ -506,7 +560,6 @@ function renderFlipReveal(enacted) {
         </div>
     `;
 
-    // Trigger the flip after a tiny delay so the eye can follow
     setTimeout(() => {
         const card = document.getElementById('revealCard');
         if (card) card.classList.add('flipped');
@@ -518,7 +571,11 @@ async function usePower(targetId) {
     const response = await fetch('/use-power', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId: myPlayerId, targetId: targetId })
+        body: JSON.stringify({ 
+            playerId: myPlayerId,
+            targetId: targetId,
+            lobbyId: selectedLobbyId
+        })
     });
     if (response.ok) {
         console.log("Power used!");
@@ -533,26 +590,44 @@ async function endPowerTurn() {
     await fetch('/end-power', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerId: myPlayerId })
+        body: JSON.stringify({ 
+            playerId: myPlayerId,
+            lobbyId: selectedLobbyId
+        })
     });
     refreshLobby();
 }
 
 window.onload = async () => {
     const savedId = localStorage.getItem('dirtyMoneyPlayerId');
-    if (savedId) {
-        const response = await fetch(`/game-state?playerId=${savedId}`);
-        const data = await response.json();
-        const stillInGame = data.players.find(p => p.id === savedId);
-        
-        if (stillInGame) {
-            myPlayerId = savedId;
-            document.getElementById('setup-ui').innerHTML = 
-                `<p style="color: var(--clr-authentic); font-family: var(--font-display); text-transform: uppercase;">✓ Reconnected as <b>${stillInGame.name}</b></p>`;
-            console.log("Reconnected successfully:", myPlayerId);
-        } else {
-            localStorage.removeItem('dirtyMoneyPlayerId');
+    const savedLobby = localStorage.getItem('dirtyMoneyLobbyId');
+
+    if (savedId && savedLobby) {
+        try {
+            const response = await fetch(`/game-state?lobbyId=${savedLobby}&playerId=${savedId}`);
+            if (response.ok) {
+                const data = await response.json();
+                const stillInGame = data.players.find(p => p.id === savedId);
+            
+                if (stillInGame) {
+                    myPlayerId = savedId;
+                    selectedLobbyId = savedLobby;
+                    document.getElementById('setup-ui').innerHTML = 
+                    `<p style="color: var(--clr-authentic); font-family: var(--font-display); text-transform: uppercase;">✓ Reconnected to <b>${savedLobby}</b> as <b>${stillInGame.name}</b></p>`;
+                console.log("Reconnected successfully:", myPlayerId);
+                } else {
+                    localStorage.removeItem('dirtyMoneyPlayerId');
+                    localStorage.removeItem('dirtyMoneyLobbyId');
+                    await loadLobbies();
+                }
+            } else {
+                await loadLobbies();
+            }
+        } catch (err) {
+            await loadLobbies();
         }
+    } else {
+        await loadLobbies();
     }
 };
 

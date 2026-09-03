@@ -141,6 +141,51 @@ button:active {
     background: oklch(42% 0.16 0);
 }
 
+/* Select Dropdown (for Lobby Selection) */
+select {
+    padding: var(--space-md);
+    background: var(--clr-bg-surface);
+    border: 1px solid var(--clr-border);
+    color: var(--clr-text-primary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color 0.2s, outline 0.2s;
+    cursor: pointer;
+    appearance: none; /* Removes default OS arrow where supported */
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--clr-authentic);
+}
+
+select option {
+    background: var(--clr-bg-surface);
+    color: var(--clr-text-primary);
+}
+
+/* Disabled Button State */
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Action Button Container Layouts */
+#supplier-candidates,
+#power-targets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+#supplier-candidates button,
+#power-targets button {
+    flex: 1 1 calc(50% - var(--space-sm));
+    min-width: 140px;
+}
+
 /* Role Card - Classified Document Style */
 #role-card {
     display: none;

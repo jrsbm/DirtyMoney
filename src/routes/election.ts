@@ -1,13 +1,18 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { gameState } from '../state';
+import { lobbies } from '../server';
 import { adjustFunds, rotateTrader } from '../gameLogic';
 
 const router = express.Router();
 
 // Nominate route
 router.post('/nominate', (req: Request, res: Response) => {
-    const {traderId, supplierId } = req.body;
+    const { lobbyId, traderId, supplierId } = req.body;
+
+    if (!lobbyId || !lobbies[lobbyId]) {
+        return res.status(404).json({ error: "Lobby not found" });
+    }
+    const gameState = lobbies[lobbyId];
 
     // Validate Trader
     const currentTrader = gameState.players[gameState.traderIndex];
@@ -34,13 +39,18 @@ router.post('/nominate', (req: Request, res: Response) => {
     gameState.powerResult = null;
 
     const supplierName =gameState.players.find(p => p.id === supplierId)?.name;
-    console.log(`${currentTrader.name} nominated ${supplierName} for the Supply Team.`);
-    res.json({ message: "Nomination successful, voting begins."});
+    console.log(`[${lobbyId}] ${currentTrader.name} nominated ${supplierName} for the Supply Team.`);
+    res.json({ message: "Nomination successful, voting begins." });
 });
 
 // Vote route
 router.post('/vote', (req: Request, res: Response) => {
-    const { playerId, vote } = req.body;
+    const { lobbyId, playerId, vote } = req.body;
+
+    if (!lobbyId || !lobbies[lobbyId]) {
+        return res.status(404).json({ error: "Lobby not found" });
+    }
+    const gameState = lobbies[lobbyId];
 
     // 1. Only allow voting during the VOTING phase
     if (gameState.status !== 'VOTING') {
@@ -49,7 +59,7 @@ router.post('/vote', (req: Request, res: Response) => {
 
     // 2. Record the vote
     gameState.votes[playerId] = vote;
-    console.log(`Vote received from ${playerId}. Total: ${Object.keys(gameState.votes).length}/${gameState.players.length}`);
+    console.log(`[${lobbyId}] Vote received from ${playerId}. Total: ${Object.keys(gameState.votes).length}/${gameState.players.length}`);
 
     // 3. Check if everyone has voted
     const livingPlayers = gameState.players.filter(p => p.isAlive);
@@ -59,17 +69,17 @@ router.post('/vote', (req: Request, res: Response) => {
 
         if (yesVotes > playersAlive / 2) {
             // SUCCESS: Election Passes
-            console.log("Election Passed!");
+            console.log(`[${lobbyId}] Election Passed!`);
             gameState.lastResult = 'PASS';
             gameState.status = 'LEGISLATIVE';
             gameState.hand = gameState.policyDeck.splice(0, 3);
         } else {
             // FAILURE: Election Fails
-            console.log("Election Failed! Moving to next Trader.");
+            console.log(`[${lobbyId}] Election Failed! Moving to next Trader.`);
             gameState.lastResult = 'FAIL - Funds decreased by €1M';
-            adjustFunds(-1);
+            adjustFunds(gameState, -1);
             gameState.status = 'ELECTION';
-            rotateTrader();
+            rotateTrader(gameState);
             gameState.nominatedSupplierId = null;
         }
         

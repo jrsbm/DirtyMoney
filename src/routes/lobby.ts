@@ -1,13 +1,19 @@
 import express from 'express';
 import { Player } from '../types';
-import { gameState } from '../state';
+import { lobbies } from '../server';
 import { startGameLogic } from '../gameLogic';
 
 const router = express.Router();
 
 // Join route
 router.post('/join', (req, res) => {
-    const { name } = req.body;
+    const { name, lobbyId } = req.body;
+
+    if(!lobbyId || !lobbies[lobbyId]) {
+        return res.status(404).json({ error: "Lobby not found" });
+    }
+
+    const gameState = lobbies[lobbyId];
 
     if (!name) {
         console.log("Join failed: No name provided");
@@ -19,7 +25,7 @@ router.post('/join', (req, res) => {
         p => p.name.toLowerCase() === cleanName.toLowerCase()
     );
     if (existingPlayer) {
-        console.log(`${cleanName} reconnected.`);
+        console.log(`${cleanName} reconnected to ${lobbyId}.`);
         return res.json(existingPlayer); 
     }
 
@@ -31,28 +37,34 @@ router.post('/join', (req, res) => {
     }
 
     if (gameState.players.length >= 10) {
-        return res.status(403).json({ error: "Game is full" });
+        return res.status(403).json({ error: "Lobby is full" });
     }
 
     if (gameState.status !== 'LOBBY') {
-        return res.status(403).json({ error: "Game already in progress" });
+        return res.status(403).json({ error: "Lobby already in progress" });
     }
 
     const newPlayer: Player = {
-        id: Math.random().toString(36).substr(2, 9),
+        id: Math.random().toString(36).substring(2, 9),
         name: name,
         isReady: false,
         identity: null,
         isAlive: true,
     };
     gameState.players.push(newPlayer);
-    console.log(`${name} joined the game.Total players: ${gameState.players.length}`);
+    console.log(`${name} joined lobby ${lobbyId}.Total players: ${gameState.players.length}`);
     res.json(newPlayer);
 });
 
 // Ready route
 router.post('/ready', (req, res) => {
-    const { playerId } = req.body;
+    const { playerId, lobbyId } = req.body;
+
+    if (!lobbyId || !lobbies[lobbyId]) {
+        return res.status(404).json({ error: "Lobby not found" });
+    }
+
+    const gameState = lobbies[lobbyId];
     const player = gameState.players.find(p => p.id === playerId);
 
     if (!player) return res.status(404).json({ error: "Player not found" });
@@ -65,9 +77,8 @@ router.post('/ready', (req, res) => {
     const allReady = gameState.players.length >= 5 && gameState.players.every(p => p.isReady);
 
     if (allReady) {
-        // Trigger your existing start game logic here
-        startGameLogic(); 
-        console.log("Everyone ready! Starting game...");
+        startGameLogic(gameState); 
+        console.log(`[${lobbyId}] Everyone ready. Starting game...`);
     }
 
     res.json({ isReady: player.isReady, gameStarted: allReady });
